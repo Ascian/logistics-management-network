@@ -21,7 +21,8 @@ bool ReceiverModule::execute(SOCKET& cliSock, const string& command, const set<i
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -36,7 +37,8 @@ bool ReceiverModule::execute(SOCKET& cliSock, const string& command, const set<i
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {
@@ -59,7 +61,8 @@ bool ReceiverModule::execute(SOCKET& cliSock, const string& command, const set<i
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -74,7 +77,8 @@ bool ReceiverModule::execute(SOCKET& cliSock, const string& command, const set<i
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {
@@ -97,7 +101,8 @@ bool ReceiverModule::execute(SOCKET& cliSock, const string& command, const set<i
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -112,7 +117,8 @@ bool ReceiverModule::execute(SOCKET& cliSock, const string& command, const set<i
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {
@@ -138,7 +144,8 @@ bool ReceiverModule::execute(SOCKET& cliSock, const string& command, const set<i
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -153,7 +160,8 @@ bool ReceiverModule::execute(SOCKET& cliSock, const string& command, const set<i
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {
@@ -184,7 +192,8 @@ bool ReceiverModule::execute(SOCKET& cliSock, const string& command, const set<i
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -199,7 +208,8 @@ bool ReceiverModule::execute(SOCKET& cliSock, const string& command, const set<i
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {

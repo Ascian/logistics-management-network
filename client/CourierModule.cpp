@@ -13,7 +13,8 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
         send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf;
     }
     else if (command == commands.at(2) && !ban.contains(2)) {
@@ -66,7 +67,8 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
         }
         
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -81,7 +83,8 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {
@@ -138,7 +141,8 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
         }
         
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -153,7 +157,8 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {
@@ -176,7 +181,8 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
         }
         
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -191,7 +197,8 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {
@@ -214,7 +221,8 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -229,7 +237,8 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
            }
            else {
@@ -255,7 +264,8 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -270,7 +280,8 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {
@@ -296,7 +307,8 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -311,7 +323,8 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {
@@ -342,7 +355,8 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -357,7 +371,8 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {
@@ -390,7 +405,8 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
     }

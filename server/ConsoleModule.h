@@ -6,6 +6,8 @@
 #include<mutex>
 
 #include"Logistics.h"
+#include"Event.h"
+#include"Command.h"
 
 const int STRING_MAX_SIZE = 30;
 const int MAX_BUFFER_SIZE = 2000;

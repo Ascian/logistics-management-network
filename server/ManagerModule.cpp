@@ -5,7 +5,7 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
     ostringstream outBuf;
     istringstream recvInf(recvBuf);
     char event;
-    recvInf >> event;
+    recvInf.get(event);
     switch (event) {
     case RETURN: {
         return true;
@@ -38,12 +38,13 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
             mutx.lock();
             pLogistics->createCourierAccount(username, password, name, stoull(phone));
             mutx.unlock();
+            cout << "A new courier \"" << username << "\" added" << endl;
             char outBuf = SUCCESS;
             send(pClient->cliSock, &outBuf, 1, 0);
         }
-        catch (const char* msg) {
+        catch (const char msg) {
             mutx.unlock();
-            send(pClient->cliSock, msg, 1, 0);
+            send(pClient->cliSock, &msg, 1, 0);
         }
         break;
     }
@@ -54,12 +55,13 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
             mutx.lock();
             pLogistics->deleteCourierAccount(username);
             mutx.unlock();
+            cout << "Courier \"" << username << "\" deleted" << endl;
             char outBuf = SUCCESS;
             send(pClient->cliSock, &outBuf, 1, 0);
         }
-        catch (const char* msg) {
+        catch (const char msg) {
             mutx.unlock();
-            send(pClient->cliSock, msg, 1, 0);
+            send(pClient->cliSock, &msg, 1, 0);
         }
         break;
     }
@@ -71,8 +73,8 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
         try {
             moreInf = pLogistics->notAExpToString(outBuf, i * 10, i * 10 + 9);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
             break;
         }
         char msg = SUCCESS;
@@ -80,7 +82,7 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
 
         i++;
         send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        char msg = 1;
+        msg = 1;
         while (moreInf) {
             send(pClient->cliSock, &msg, 1, 0);
 
@@ -104,8 +106,8 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
         try {
             pExpress = pLogistics->findExpress(courierNum);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
             break;
         }
 
@@ -113,12 +115,14 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
             mutx.lock();
             pLogistics->assignExpress(pExpress, username);
             mutx.unlock();
+            cout << "Express \"" << setfill('0') << setw(10) << courierNum << 
+                "\" assigned to courier \"" << username << "\"" << endl;
             char outBuf = SUCCESS;
             send(pClient->cliSock, &outBuf, 1, 0);
         }
-        catch (const char* msg) {
+        catch (const char msg) {
             mutx.unlock();
-            send(pClient->cliSock, msg, 1, 0);
+            send(pClient->cliSock, &msg, 1, 0);
         }
         break;
     }
@@ -128,8 +132,8 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
         try {
             moreInf = pLogistics->usersToString(outBuf, i * 10, i * 10 + 9);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
             break;
         }
 
@@ -138,7 +142,7 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
 
         i++;
         send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        char msg = 1;
+        msg = 1;
         while (moreInf) {
             send(pClient->cliSock, &msg, 1, 0);
 
@@ -162,8 +166,8 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
         try {
             moreInf = pLogistics->couriersToString(outBuf, i * 10, i * 10 + 9);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
             break;
         }
 
@@ -172,7 +176,7 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
 
         i++;
         send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        char msg = 1;
+        msg = 1;
         while (moreInf) {
             send(pClient->cliSock, &msg, 1, 0);
 
@@ -196,8 +200,8 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
         try {
             moreInf = pLogistics->expressesToString(outBuf, i * 10, i * 10 + 9);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
             break;
         }
 
@@ -206,7 +210,7 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
 
         i++;
         send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        char msg = 1;
+        msg = 1;
         while (moreInf) {
             send(pClient->cliSock, &msg, 1, 0);
 
@@ -241,7 +245,7 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
             }
             send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
             i++;
-            char msg = 1;
+            msg = 1;
             while (j < expresses.size()) {
                 send(pClient->cliSock, &msg, 1, 0);
 
@@ -261,8 +265,8 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
             msg = 0;
             send(pClient->cliSock, &msg, 1, 0);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
         }
         break;
     }
@@ -275,8 +279,8 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
             char outBuf = SUCCESS;
             send(pClient->cliSock, &outBuf, 1, 0);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
         }
         break;
     }
@@ -289,8 +293,8 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
             char outBuf = SUCCESS;
             send(pClient->cliSock, &outBuf, 1, 0);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
         }
         break;
     }
@@ -303,8 +307,8 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
             send(pClient->cliSock, &msg, 1, 0);
             send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
         }
         break;
     }

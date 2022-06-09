@@ -162,6 +162,7 @@
   <ItemGroup>
     <ClInclude Include="Account.h" />
     <ClInclude Include="Book.h" />
+    <ClInclude Include="Command.h" />
     <ClInclude Include="ConsoleModule.h" />
     <ClInclude Include="Courier.h" />
     <ClInclude Include="CourierModule.h" />

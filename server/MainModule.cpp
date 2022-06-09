@@ -3,7 +3,7 @@ bool MainModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
 {
     istringstream recvInf(recvBuf);
     char event;
-    recvInf >> event;
+    recvInf.get(event);
     switch (event) {
     case EXIT:
         return true;
@@ -18,8 +18,8 @@ bool MainModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
             char outBuf = SUCCESS;
             send(pClient->cliSock, &outBuf, 1, 0);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
         }
         break;
     }
@@ -33,8 +33,8 @@ bool MainModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
             char outBuf = SUCCESS;
             send(pClient->cliSock, &outBuf, 1, 0);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
         }
         break;
     }
@@ -48,8 +48,8 @@ bool MainModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
             char outBuf = SUCCESS;
             send(pClient->cliSock, &outBuf, 1, 0);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
         }
         break;
     }
@@ -64,13 +64,15 @@ bool MainModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
             mutx.lock();
             pLogistics->createUserAccount(username, password, name, stoull(phone), address);
             mutx.unlock();
+            cout << "A new user \"" << username << "\" added" << endl;
             char outBuf = SUCCESS;
             send(pClient->cliSock, &outBuf, 1, 0);
         }
-        catch (const char* msg) {
+        catch (const char msg) {
             mutx.unlock();
-            send(pClient->cliSock, msg, 1, 0);
+            send(pClient->cliSock, &msg, 1, 0);
         }
+
         break;
     }
     default:

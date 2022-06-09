@@ -21,7 +21,8 @@ bool SenderModule::execute(SOCKET& cliSock, const string& command, const set<int
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -36,7 +37,8 @@ bool SenderModule::execute(SOCKET& cliSock, const string& command, const set<int
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {
@@ -59,7 +61,8 @@ bool SenderModule::execute(SOCKET& cliSock, const string& command, const set<int
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -74,7 +77,8 @@ bool SenderModule::execute(SOCKET& cliSock, const string& command, const set<int
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {
@@ -100,7 +104,8 @@ bool SenderModule::execute(SOCKET& cliSock, const string& command, const set<int
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -115,7 +120,8 @@ bool SenderModule::execute(SOCKET& cliSock, const string& command, const set<int
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {
@@ -146,7 +152,8 @@ bool SenderModule::execute(SOCKET& cliSock, const string& command, const set<int
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -161,7 +168,8 @@ bool SenderModule::execute(SOCKET& cliSock, const string& command, const set<int
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {

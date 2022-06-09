@@ -13,7 +13,8 @@ bool ManagerModule::execute(SOCKET& cliSock, const string& command, const set<in
         send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf;
     }
     else if (command == commands.at(2) && !ban.contains(2)) {
@@ -126,7 +127,8 @@ bool ManagerModule::execute(SOCKET& cliSock, const string& command, const set<in
         }
         
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -141,7 +143,8 @@ bool ManagerModule::execute(SOCKET& cliSock, const string& command, const set<in
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {
@@ -165,13 +168,13 @@ bool ManagerModule::execute(SOCKET& cliSock, const string& command, const set<in
         unsigned int num = stoul(courierNum);
         send(cliSock, (char*)&num, 4, 0);
 
-        char msg;
+        msg;
         recv(cliSock, &msg, 1, 0);
 
         if (msg == SUCCESS) {
             cout << "Succeed to assign" << endl;
         }
-        else if(ELEMENT_NOT_FOUND) {
+        else if(msg == ELEMENT_NOT_FOUND) {
             cout << "No such express or courier" << endl;
         }
         else {
@@ -190,7 +193,8 @@ bool ManagerModule::execute(SOCKET& cliSock, const string& command, const set<in
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -205,7 +209,8 @@ bool ManagerModule::execute(SOCKET& cliSock, const string& command, const set<in
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
            }
            else {
@@ -227,7 +232,8 @@ bool ManagerModule::execute(SOCKET& cliSock, const string& command, const set<in
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -242,7 +248,8 @@ bool ManagerModule::execute(SOCKET& cliSock, const string& command, const set<in
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
            }
            else {
@@ -264,7 +271,8 @@ bool ManagerModule::execute(SOCKET& cliSock, const string& command, const set<in
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -279,7 +287,8 @@ bool ManagerModule::execute(SOCKET& cliSock, const string& command, const set<in
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
            }
            else {
@@ -310,7 +319,8 @@ bool ManagerModule::execute(SOCKET& cliSock, const string& command, const set<in
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
 
         recv(cliSock, &msg, 1, 0);
@@ -325,7 +335,8 @@ bool ManagerModule::execute(SOCKET& cliSock, const string& command, const set<in
             if (more == "Y" || more == "y") {
                 msg = 1;
                 send(cliSock, &msg, 1, 0);
-                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                recvBuf[len] = 0;
                 cout << recvBuf << endl;
             }
             else {
@@ -404,7 +415,8 @@ bool ManagerModule::execute(SOCKET& cliSock, const string& command, const set<in
         }
 
         char recvBuf[MAX_BUFFER_SIZE];
-        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         cout << recvBuf << endl;
     }
     else if (command == commands.at(14) && !ban.contains(14)) {

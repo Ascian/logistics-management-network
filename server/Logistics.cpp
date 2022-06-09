@@ -4,11 +4,11 @@ bool Logistics::createUserAccount(const string& username, const string& password
 	const unsigned _int64 phone, const string& address)
 {
 	if (users.size() >= users.max_size()) {
-		throw ELEMENT_EXCEED_LIMIT;
+		throw(char)ELEMENT_EXCEED_LIMIT;
 		return false;
 	}
 	if (users.contains(username)) {
-		throw ACCOUNT_ALREADY_EXIST;
+		throw (char)ACCOUNT_ALREADY_EXIST;
 		return false;
 	}
 	User* newAccount = new User(username, password,name,phone,address);
@@ -19,11 +19,11 @@ bool Logistics::createUserAccount(const string& username, const string& password
 bool Logistics::createCourierAccount(const string& username, const string& password, const string& name, const unsigned _int64 phone)
 {
 	if (couriers.size() >= couriers.max_size()) {
-		throw ELEMENT_EXCEED_LIMIT;
+		throw (char)ELEMENT_EXCEED_LIMIT;
 		return false;
 	}
 	if (couriers.contains(username)) {
-		throw ACCOUNT_ALREADY_EXIST;
+		throw (char)ACCOUNT_ALREADY_EXIST;
 		return false;
 	}
 	Courier* newAccount = new Courier(username, password, name, phone);
@@ -34,11 +34,11 @@ bool Logistics::createCourierAccount(const string& username, const string& passw
 bool Logistics::loginManagerAccount(const string& username, const string& password)
 {
 	if (manager.getUsername() != username) {
-		throw ELEMENT_NOT_FOUND;
+		throw (char)ELEMENT_NOT_FOUND;
 		return false;
 	}
 	if (manager.getPassword() != password) {
-		throw PASSWORD_ERROR;
+		throw (char)PASSWORD_ERROR;
 		return false;
 	}
 	return true;
@@ -46,12 +46,12 @@ bool Logistics::loginManagerAccount(const string& username, const string& passwo
 
 User* Logistics::loginUserAccount(const string& username, const string& password) {
 	if (!users.contains(username)) {
-		throw ELEMENT_NOT_FOUND;
+		throw (char)ELEMENT_NOT_FOUND;
 		return NULL;
 	}
 	auto temp = users.find(username);
 	if (temp->second->getPassword() != password) {
-		throw PASSWORD_ERROR;
+		throw(char)PASSWORD_ERROR;
 		return NULL;
 	}
 	return temp->second;
@@ -60,12 +60,12 @@ User* Logistics::loginUserAccount(const string& username, const string& password
 Courier* Logistics::loginCourierAccount(const string& username, const string& password)
 {
 	if (!couriers.contains(username)) {
-		throw ELEMENT_NOT_FOUND;
+		throw (char)ELEMENT_NOT_FOUND;
 		return NULL;
 	}
 	auto temp = couriers.find(username);
 	if (temp->second->getPassword() != password) {
-		throw PASSWORD_ERROR;
+		throw (char)PASSWORD_ERROR;
 		return NULL;
 	}
 	return temp->second;
@@ -74,7 +74,7 @@ Courier* Logistics::loginCourierAccount(const string& username, const string& pa
 bool Logistics::deleteCourierAccount(const string& username)
 {
 	if (!couriers.contains(username)) {
-		throw ELEMENT_NOT_FOUND;
+		throw (char)ELEMENT_NOT_FOUND;
 		return false;
 	}
 	couriers.erase(couriers.find(username));
@@ -100,27 +100,27 @@ bool Logistics::createLogistics(const string& senderUsername, const string& rece
 	const string& condition, const string& description, const unsigned int amount, const string& kind)
 {
 	if (senderUsername == receiverUsername) {
-		throw RECEIVER_EQUAL_SENDER;
+		throw (char)RECEIVER_EQUAL_SENDER;
 		return false;
 	}
 
 	auto temp = users.find(senderUsername);
 	if (temp == users.end()) {
-		throw SENDER_NOT_EXIST;
+		throw (char)SENDER_NOT_EXIST;
 		return false;
 	}
 
 	User* sender = temp->second;
 	temp = users.find(receiverUsername);
 	if (temp == users.end()) {
-		throw RECEIVER_NOT_EXIST;
+		throw (char)RECEIVER_NOT_EXIST;
 		return false;
 	}
 	User* receiver = temp->second;
 
 	//创建快递单号
 	if (expresses.size() >= expresses.max_size()) {
-		throw ELEMENT_EXCEED_LIMIT;
+		throw (char)ELEMENT_EXCEED_LIMIT;
 		return false;
 	}
 	unsigned int courierNumber = expresses.size();
@@ -129,13 +129,13 @@ bool Logistics::createLogistics(const string& senderUsername, const string& rece
 	createExpress(pExpress, sender->getUsername(), receiver->getUsername(), time(0), 
 		condition, description, courierNumber, amount, kind);
 	if (!pExpress) {
-		throw(EXPRESS_UNKNOWN_KIND);
+		throw(char)(EXPRESS_UNKNOWN_KIND);
 		return false;
 	}
 
 	if (sender->getBalance() < pExpress->getPrice()) {
 		//余额不足
-		throw BALANCE_NOT_ENOUGH;
+		throw (char)BALANCE_NOT_ENOUGH;
 		return false;
 	}
 
@@ -160,13 +160,13 @@ bool Logistics::createLogistics(const string& senderUsername, const string& rece
 
 bool Logistics::assignExpress(Express* pExpress, const string& courierUsername){
 	if (pExpress->getSendTime() != NOT_ASSIGNED) {
-		throw EXPRESS_ALREADY_ASSIGN;
+		throw (char)EXPRESS_ALREADY_ASSIGN;
 		return false;
 	}
 	
 	auto temp = couriers.find(courierUsername);
 	if (temp == couriers.end()) {
-		throw ELEMENT_NOT_FOUND;
+		throw (char)ELEMENT_NOT_FOUND;
 		return false;
 	}
 	Courier* pCourier = temp->second;
@@ -185,7 +185,7 @@ bool Logistics::assignExpress(Express* pExpress, const string& courierUsername){
 void Logistics::pickUpExpress(Express* pExpress)
 {
 	if (pExpress->getSendTime() != NOT_SENDED) {
-		throw(EXPRESS_ALREADY_PICKUP);
+		throw(char)(EXPRESS_ALREADY_PICKUP);
 		return;
 	}
 	pExpress->setSendTime(time(0));
@@ -214,11 +214,11 @@ void Logistics::pickUpExpress(Express* pExpress)
 void Logistics::signForExpress(Express* pExpress)
 {
 	if (pExpress->getSendTime() == NOT_ASSIGNED || pExpress->getSendTime() == NOT_SENDED) {
-		throw(EXPRESS_FORBIT_SIGNFOR);
+		throw(char)(EXPRESS_FORBIT_SIGNFOR);
 		return;
 	}
 	if (pExpress->getReceiveTime() != NOT_RECEIVED) {
-		throw(EXPRESS_ALREADY_SIGNFOR);
+		throw(char)(EXPRESS_ALREADY_SIGNFOR);
 		return;
 	}
 
@@ -237,8 +237,8 @@ void Logistics::signForExpress(Express* pExpress)
 
 const bool Logistics::usersToString(ostringstream& oss, const int begin, const int end){
 	if (users.size() == 0) {
-		throw(CONTAINER_EMPTY);
-		return;
+		throw(char)(CONTAINER_EMPTY);
+		return false;
 	}
 	unsigned int i = 1;
 	auto iter = users.begin();
@@ -256,8 +256,8 @@ const bool Logistics::usersToString(ostringstream& oss, const int begin, const i
 const bool Logistics::couriersToString(ostringstream& oss, const int begin, const int end)
 {
 	if (couriers.size() == 0) {
-		throw(CONTAINER_EMPTY);
-		return;
+		throw(char)(CONTAINER_EMPTY);
+		return false;
 	}
 	unsigned int i = 1;
 	auto iter = couriers.begin();
@@ -274,8 +274,8 @@ const bool Logistics::couriersToString(ostringstream& oss, const int begin, cons
 
 const bool Logistics::expressesToString(ostringstream& oss, const int begin, const int end){
 	if (expresses.size() == 0) {
-		throw(CONTAINER_EMPTY);
-		return;
+		throw(char)(CONTAINER_EMPTY);
+		return false;
 	}
 	unsigned int i = 1;
 	auto iter = expresses.begin();
@@ -293,15 +293,15 @@ const bool Logistics::expressesToString(ostringstream& oss, const int begin, con
 const bool Logistics::notAExpToString(ostringstream& oss, const int begin, const int end)
 {
 	if (notAssignedList.size() == 0) {
-		throw(CONTAINER_EMPTY);
-		return;
+		throw(char)(CONTAINER_EMPTY);
+		return false;
 	}
 	unsigned int i = 1;
 	auto iter = notAssignedList.begin();
 	for (; i < begin && iter != notAssignedList.end(); i++, iter++);
 	for (; i <= end && iter != notAssignedList.end(); i++, iter++) {
 		oss << "[" << i << "]" << endl;
-		oss << *iter << endl;
+		oss << **iter << endl;
 	}
 	if (iter != notAssignedList.end()) {
 		return true;
@@ -313,7 +313,7 @@ Courier* Logistics::findCourier(const string& username)
 {
 	auto temp = couriers.find(username);
 	if (temp == couriers.end()) {
-		throw(ELEMENT_NOT_FOUND);
+		throw(char)(ELEMENT_NOT_FOUND);
 		return NULL;
 	}
 	return temp->second;
@@ -323,7 +323,7 @@ User* Logistics::findUser(const string& username)
 {
 	auto temp = users.find(username);
 	if (temp == users.end()) {
-		throw(ELEMENT_NOT_FOUND);
+		throw(char)(ELEMENT_NOT_FOUND);
 		return NULL;
 	}
 	return temp->second;
@@ -333,7 +333,7 @@ Express* Logistics::findExpress(const unsigned int courierNumber)
 {
 	auto temp = expresses.find(courierNumber);
 	if (temp == expresses.end()) {
-		throw(ELEMENT_NOT_FOUND);
+		throw(char)(ELEMENT_NOT_FOUND);
 		return NULL;
 	}
 	return temp->second;
@@ -346,7 +346,7 @@ const vector<const Express*> Logistics::searchCreateTime(const time_t& begin, co
 		result.push_back(temp->second);
 	}
 	if (result.size() == 0)
-		throw(ELEMENT_NOT_FOUND);
+		throw(char)(ELEMENT_NOT_FOUND);
 	return result;
 }
 

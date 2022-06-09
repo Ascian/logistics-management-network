@@ -1,11 +1,6 @@
 #pragma once
 #include "ConsoleModule.h"
 
-enum EVENT : uint8_t
-{
-    RETURN, CHECK, PASSWORD, NAME, PHONE, PICKUP, DSPLYNPEXP, DSPLYNREXP,
-    DSPLYREXP, SRCHSENDER, SRCHRECEIVER, SRCHPICKTM, FINDEXP
-};
 
 class CourierModule :
     public ConsoleModule

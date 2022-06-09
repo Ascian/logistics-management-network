@@ -5,7 +5,7 @@ bool UserModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
     ostringstream outBuf;
     istringstream recvInf(recvBuf);
     char event;
-    recvInf >> event;
+    recvInf.get(event);
     switch (event) {
     case RETURN:
         return true;
@@ -57,10 +57,13 @@ bool UserModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
             mutx.lock();
             pLogistics->createLogistics(pClient->pUser->getUsername(), receiver, condition, description, stoul(amount), kind);
             mutx.unlock();
+            cout << "A new express added" << endl;
+            char msg = SUCCESS;
+            send(pClient->cliSock, &msg, 1, 0);
         }
-        catch (const char* msg) {
+        catch (const char msg) {
             mutx.unlock();
-            send(pClient->cliSock, msg, 1, 0);
+            send(pClient->cliSock, &msg, 1, 0);
         }
         break;
     }
@@ -70,8 +73,8 @@ bool UserModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
         try {
             moreInf = pClient->pUser->notRExpToString(outBuf, i * 10, i * 10 + 9);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
             break;
         }
 
@@ -79,7 +82,7 @@ bool UserModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
         send(pClient->cliSock, &msg, 1, 0);
         i++;
         send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        char msg = 1;
+        msg = 1;
         while (moreInf) {
             send(pClient->cliSock, &msg, 1, 0);
 
@@ -116,6 +119,7 @@ bool UserModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
                         mutx.lock();
                         pLogistics->signForExpress(pExpress);
                         mutx.unlock();
+                        cout << "Express \"" << setfill('0') << setw(10) << courierNum << "\" signed for" << endl;
                         char msg = SUCCESS;
                         send(pClient->cliSock, &msg, 1, 0);
                     }
@@ -125,8 +129,8 @@ bool UserModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
                     send(pClient->cliSock, &msg, 1, 0);
                 }
             }
-            catch (const char* msg) {
-                send(pClient->cliSock, msg, 1, 0);
+            catch (const char msg) {
+                send(pClient->cliSock, &msg, 1, 0);
             }
         }
         break;
@@ -148,8 +152,8 @@ bool UserModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
             send(pClient->cliSock, &msg, 1, 0);
             send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
         }
         break;
     }

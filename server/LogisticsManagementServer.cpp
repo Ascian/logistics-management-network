@@ -138,7 +138,8 @@ void serverWorking(Client* pClient)
     char* recvBuf = new char[MAX_BUFFER_SIZE];
     bool ret = false;
     while (!ret) {
-        recv(pClient->cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        int len = recv(pClient->cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        recvBuf[len] = 0;
         ret = pMainModule->parse(pLogistics, pClient, recvBuf, mutx);
     }
     delete(recvBuf);

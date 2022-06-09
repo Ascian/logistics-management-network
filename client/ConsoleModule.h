@@ -2,13 +2,15 @@
 #include<string>
 #include<vector>
 #include<iostream>
-#include <regex>
+#include<regex>
 #include<climits>
 #include<set>
 #include<Winsock2.h>
 #include<sstream>
+#include<iomanip>
 
 #include"Event.h"
+#include"Command.h"
 
 const int STRING_MAX_SIZE = 30;
 const int MAX_BUFFER_SIZE = 2000;

@@ -5,7 +5,7 @@ bool ReceiverModule::execute(Logistics* pLogistics, Client* pClient, const char*
     ostringstream outBuf;
     istringstream recvInf(recvBuf);
     char event;
-    recvInf >> event;
+    recvInf.get(event);
     switch (event) {
     case RETURN: {
         return true;
@@ -17,8 +17,8 @@ bool ReceiverModule::execute(Logistics* pLogistics, Client* pClient, const char*
         try {
             moreInf = pClient->pUser->notPExpToString(outBuf, i * 10, i * 10 + 9);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
             break;
         }
 
@@ -27,7 +27,7 @@ bool ReceiverModule::execute(Logistics* pLogistics, Client* pClient, const char*
 
         i++;
         send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        char msg = 1;
+        msg = 1;
         while (moreInf) {
             send(pClient->cliSock, &msg, 1, 0);
 
@@ -52,8 +52,8 @@ bool ReceiverModule::execute(Logistics* pLogistics, Client* pClient, const char*
         try {
             moreInf = pClient->pUser->notPExpToString(outBuf, i * 10, i * 10 + 9);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
             break;
         }
 
@@ -62,7 +62,7 @@ bool ReceiverModule::execute(Logistics* pLogistics, Client* pClient, const char*
 
         i++;
         send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        char msg = 1;
+        msg = 1;
         while (moreInf) {
             send(pClient->cliSock, &msg, 1, 0);
 
@@ -86,8 +86,8 @@ bool ReceiverModule::execute(Logistics* pLogistics, Client* pClient, const char*
         try {
             moreInf = pClient->pUser->notPExpToString(outBuf, i * 10, i * 10 + 9);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
             break;
         }
 
@@ -96,7 +96,7 @@ bool ReceiverModule::execute(Logistics* pLogistics, Client* pClient, const char*
 
         i++;
         send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        char msg = 1;
+        msg = 1;
         while (moreInf) {
             send(pClient->cliSock, &msg, 1, 0);
 
@@ -130,7 +130,7 @@ bool ReceiverModule::execute(Logistics* pLogistics, Client* pClient, const char*
             }
             send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
             i++;
-            char msg = 1;
+            msg = 1;
             while (j < expresses.size()) {
                 send(pClient->cliSock, &msg, 1, 0);
 
@@ -150,8 +150,8 @@ bool ReceiverModule::execute(Logistics* pLogistics, Client* pClient, const char*
             msg = 0;
             send(pClient->cliSock, &msg, 1, 0);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
         }
         break;
     }
@@ -172,7 +172,7 @@ bool ReceiverModule::execute(Logistics* pLogistics, Client* pClient, const char*
             }
             send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
             i++;
-            char msg = 1;
+            msg = 1;
             while (j < expresses.size()) {
                 send(pClient->cliSock, &msg, 1, 0);
 
@@ -192,8 +192,8 @@ bool ReceiverModule::execute(Logistics* pLogistics, Client* pClient, const char*
             msg = 0;
             send(pClient->cliSock, &msg, 1, 0);
         }
-        catch (const char* msg) {
-            send(pClient->cliSock, msg, 1, 0);
+        catch (const char msg) {
+            send(pClient->cliSock, &msg, 1, 0);
         }
         break;
     }

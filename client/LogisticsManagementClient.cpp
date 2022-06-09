@@ -9,7 +9,7 @@
 using namespace std;
 
 const string SERVER_ADD = "127.0.0.1";
-const int SERVER_PORT = 6000;
+const int SERVER_PORT = 5500;
 
 MainModule mainModule;
 

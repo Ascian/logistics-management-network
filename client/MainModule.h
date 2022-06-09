@@ -5,7 +5,6 @@
 #include"ManagerModule.h"
 #include"CourierModule.h"
 
-enum COMMAND : uint8_t { EXIT, USER, COURIER, MANAGER, REGISTER };
 
 class MainModule :
     public ConsoleModule
