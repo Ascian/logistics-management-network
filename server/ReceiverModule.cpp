@@ -6,7 +6,7 @@ bool ReceiverModule::execute(Main& main, const string& command, const set<int> b
         return true;
     else if (command == commands.at(1) && !ban.contains(1)) {
         try {
-            main.pUser->notPExpressToString();
+            main.pUser->notPExpToString();
             cout << endl;
         }
         catch (const char* msg) {

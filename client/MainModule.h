@@ -11,10 +11,10 @@ class MainModule :
     public ConsoleModule
 {
 public:
-    MainModule() 
+    MainModule()
         :ConsoleModule("main") {
-        commands = {"exit", "user", "courier", "manager", "register", "help"};
-        subModules = { new UserModule(), new CourierModule(), new ManagerModule()};
+        commands = { "exit", "user", "courier", "manager", "register", "help" };
+        subModules = { new UserModule(), new CourierModule(), new ManagerModule() };
         ban = { {},{},{} };
     }
 

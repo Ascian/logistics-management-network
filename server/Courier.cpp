@@ -1,6 +1,6 @@
 #include "Courier.h"
 
-const bool Courier::notPExpressToString(ostringstream& oss, const int begin, const int end) {
+const bool Courier::notPExpToString(ostringstream& oss, const int begin, const int end) {
     if (notPickedList.size() == 0) {
         throw(CONTAINER_EMPTY);
         return;

@@ -1,5 +1,5 @@
 #include "MainModule.h"
-bool MainModule::execute(Logistics* pLogistics, Client* pClient, const char* recvBuf)
+bool MainModule::execute(Logistics* pLogistics, Client* pClient, const char* recvBuf, mutex& mutx)
 {
     istringstream recvInf(recvBuf);
     char event;
@@ -61,7 +61,9 @@ bool MainModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
         string address;
         recvInf >> username >> password >> name >> phone >> address;
         try {
+            mutx.lock();
             pLogistics->createUserAccount(username, password, name, stoull(phone), address);
+            mutx.unlock();
             char outBuf = SUCCESS;
             send(pClient->cliSock, &outBuf, 1, 0);
         }

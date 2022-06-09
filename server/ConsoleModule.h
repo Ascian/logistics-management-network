@@ -3,6 +3,7 @@
 #include<vector>
 #include<set>
 #include<Winsock2.h>
+#include<mutex>
 
 #include"Logistics.h"
 
@@ -34,18 +35,18 @@ public:
 	}
 
 	//分析命令
-	virtual inline bool parse(Logistics* pLogistics, Client* pClient,const char* recvBuf) {
+	virtual inline bool parse(Logistics* pLogistics, Client* pClient,const char* recvBuf, mutex& mutx) {
 		if (currentModule != -1) {
 			//交给子模块执行
-			if (subModules.at(currentModule)->parse(pLogistics, pClient, recvBuf))
+			if (subModules.at(currentModule)->parse(pLogistics, pClient, recvBuf, mutx))
 				currentModule = -1;
 			return false;
 		}
-		return execute(pLogistics, pClient, recvBuf);
+		return execute(pLogistics, pClient, recvBuf, mutx);
 	}
 
 	//执行命令
-	virtual bool execute(Logistics* pLogistics, Client* pClient, const char* recvBuf) = 0;
+	virtual bool execute(Logistics* pLogistics, Client* pClient, const char* recvBuf, mutex& mutx) = 0;
 
 };
 

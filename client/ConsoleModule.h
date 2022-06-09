@@ -6,8 +6,8 @@
 #include<climits>
 #include<set>
 #include<Winsock2.h>
+#include<sstream>
 
-#include"Logistics.h"
 #include"Event.h"
 
 const int STRING_MAX_SIZE = 30;
@@ -59,4 +59,3 @@ public:
 	//获取当前模块命令
 	virtual vector<string> getModuleCommand(const set<int>& ban);
 };
-

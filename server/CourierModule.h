@@ -13,6 +13,6 @@ class CourierModule :
 public:
     CourierModule() {}
 
-    virtual bool execute(Logistics* pLogistics, Client* pClient, const char* recvBuf);
+    virtual bool execute(Logistics* pLogistics, Client* pClient, const char* recvBuf, mutex& mutx);
 };
 

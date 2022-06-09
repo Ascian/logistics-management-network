@@ -1,179 +1,6 @@
 #include "CourierModule.h"
 
-bool CourierModule::execute(Main& main, const string& command, const set<int> ban)
-{
-
-    
-    else if (command == commands.at(5) && !ban.contains(5)) {
-        cout << "Not picked-up expresses:" << endl;
-        try {
-            main.pCourier->notPExpressToString();
-        }
-        catch (const char* msg) {
-            cout << msg << endl;
-            return false;
-        }
-        cout << endl;
-        cout << "Please input the courier numbers of not expresses you want to pick up" << endl;
-        cout << "Note: input '#' as the end" << endl;
-        unsigned int i = 1;
-        cout << i << ": ";
-        string courierNum;
-        cin >> courierNum;
-        regex r("[0-9]{10}");
-        while (!(regex_match(courierNum, r) || courierNum == "#")) {
-            cout << "Format error, please input a 10-digits courier number or '#'" << endl;
-            cout << i << ": ";
-            cin >> courierNum;
-        } 
-        while (courierNum != "#") {
-            try {
-                Express* pExpress = main.pLogistics->findExpress(stoul(courierNum));
-                if (pExpress->getCourier() == main.pCourier->getUsername())
-                    main.pLogistics->pickUpExpress(pExpress);
-                else
-                    cout << "You can not pick up this express" << endl;
-            }
-            catch (const char* msg) {
-                cout << msg << endl;
-            }
-            i++;
-            cout << i << ": ";
-            cin >> courierNum;
-            while (!(regex_match(courierNum, r) || courierNum == "#")) {
-                cout << "Format error, please input a 10-digits courier number or '#'" << endl;
-                cout << i << ": ";
-                cin >> courierNum;
-            }
-        }
-    }
-    else if (command == commands.at(6) && !ban.contains(6)) {
-        try {
-            main.pCourier->notPExpressToString();
-            cout << endl;
-        }
-        catch (const char* msg) {
-            cout << msg << endl;
-        }
-    }
-    else if (command == commands.at(7) && !ban.contains(7)) {
-        try {
-            main.pCourier->notRExpToString();
-            cout << endl;
-        }
-        catch (const char* msg) {
-            cout << msg << endl;
-        }
-    }
-    else if (command == commands.at(8) && !ban.contains(8)) {
-        try {
-            main.pCourier->rExpToString();
-            cout << endl;
-        }
-        catch (const char* msg) {
-            cout << msg << endl;
-        }
-    }
-    else if (command == commands.at(9) && !ban.contains(9)) {
-        cout << "Please input the sender's username: ";
-        string sender;
-        cin >> sender;
-        try {
-            vector<const Express*> expresses = main.pCourier->searchSender(sender);
-            for (auto temp : expresses)
-                cout << *((Express*)temp) << endl;
-        }
-        catch (const char* msg) {
-            cout << msg << endl;
-        }
-    }
-    else if (command == commands.at(10) && !ban.contains(10)) {
-        cout << "Please input the receiver's username: ";
-        string receiver;
-        cin >> receiver;
-        try {
-            vector<const Express*> expresses = main.pCourier->searchReceiver(receiver);
-            for (auto temp : expresses)
-                cout << *((Express*)temp) << endl;
-        }
-        catch (const char* msg) {
-            cout << msg << endl;
-        }
-    }
-    else if (command == commands.at(11) && !ban.contains(11)) {
-        cout << "Please input the time information in format %Y-%m-%d %H:%M:%S" << endl;
-        cout << "Lower Bound: ";
-        struct tm lowerBound;
-        cin >> get_time(&lowerBound, "%Y-%m-%d %H:%M:%S");
-        cout << "Upper Bound: ";     
-        struct tm upperBound;
-        cin >> get_time(&upperBound, "%Y-%m-%d %H:%M:%S");
-        cout << endl;
-        try {
-            vector<const Express*> expresses = main.pCourier->searchPickTime(mktime(&lowerBound), mktime(&upperBound));
-            for (auto temp : expresses) {
-                cout << *((Express*) temp) << endl;
-            }
-        }   
-        catch (const char* msg) {
-            cout << msg << endl;
-        }
-    }
-    else if (command == commands.at(12) && !ban.contains(12)) {
-        cout << "Please input the courier number: ";
-        string courierNum;
-        cin >> courierNum;
-        regex r("[0-9]{10}");
-        while (!regex_match(courierNum, r)) {
-            cout << "Format error, courier number has 10 digits" << endl;
-            cout << "Please input the courier number: ";
-            cin >> courierNum;
-        }
-        cout << endl;
-        try {
-            cout << *main.pLogistics->findExpress(stoul(courierNum)) << endl;
-        }
-        catch (const char* msg) {
-            cout << msg << endl;
-        }
-    }
-    else if (command == commands.at(13) && !ban.contains(13)) {
-        cout << "Available commands:" << endl;
-        if (!ban.contains(0))
-            cout << "  " << commands.at(0) << ": return to the upper module" << endl;
-        if (!ban.contains(1))
-            cout << "  " << commands.at(1) << ": check your information" << endl;
-        if (!ban.contains(2))
-            cout << "  " << commands.at(2) << ": change your password" << endl;
-        if (!ban.contains(3))
-            cout << "  " << commands.at(3) << ": change your name" << endl;
-        if (!ban.contains(4))
-            cout << "  " << commands.at(4) << ": change your phone number" << endl;
-        if (!ban.contains(5))
-            cout << "  " << commands.at(5) << ": pick up expresses" << endl;
-        if (!ban.contains(6))
-            cout << "  " << commands.at(6) << ": display all not picked-up expresses' message" << endl;
-        if (!ban.contains(7))
-            cout << "  " << commands.at(7) << ": display all not received expresses' message" << endl;
-        if (!ban.contains(8))
-            cout << "  " << commands.at(8) << ": display all received expresses' message" << endl;
-        if (!ban.contains(9))
-            cout << "  " << commands.at(9) << ": search the related expresses by sender" << endl;
-        if (!ban.contains(10))
-            cout << "  " << commands.at(10) << ": search the related expresses by receiver" << endl;
-        if (!ban.contains(11))
-            cout << "  " << commands.at(11) << ": search the related expresses by pick-up time" << endl;
-        if (!ban.contains(12))
-            cout << "  " << commands.at(12) << ": find the specific expresses by courier number" << endl;
-        if (!ban.contains(13))
-            cout << "  " << commands.at(13) << ": print this help" << endl;
-    }
-    else
-        cout << "Unknown command" << endl;
-    return false;
-}
-
-bool CourierModule::execute(Logistics* pLogistics, Client* pClient, const char* recvBuf)
+bool CourierModule::execute(Logistics* pLogistics, Client* pClient, const char* recvBuf, mutex& mutx)
 {
     ostringstream outBuf;
     istringstream recvInf(recvBuf);
@@ -207,48 +34,291 @@ bool CourierModule::execute(Logistics* pLogistics, Client* pClient, const char* 
         break;
     }
     case PICKUP: {
-
-        cout << "Not picked-up expresses:" << endl;
+        int i = 0;
+        bool moreInf;
         try {
-            main.pCourier->notPExpressToString();
+            moreInf = pClient->pCourier->notPExpToString(outBuf, i * 10, i * 10 + 9);
         }
         catch (const char* msg) {
-            cout << msg << endl;
-            return false;
+            send(pClient->cliSock, msg, 1, 0);
+            break;
         }
-        cout << endl;
-        cout << "Please input the courier numbers of not expresses you want to pick up" << endl;
-        cout << "Note: input '#' as the end" << endl;
-        unsigned int i = 1;
-        cout << i << ": ";
-        string courierNum;
-        cin >> courierNum;
-        regex r("[0-9]{10}");
-        while (!(regex_match(courierNum, r) || courierNum == "#")) {
-            cout << "Format error, please input a 10-digits courier number or '#'" << endl;
-            cout << i << ": ";
-            cin >> courierNum;
+
+        char msg = SUCCESS;
+        send(pClient->cliSock, &msg, 1, 0);
+        i++;
+        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        char msg = 1;
+        while (moreInf) {
+            send(pClient->cliSock, &msg, 1, 0);
+
+            recv(pClient->cliSock, &msg, 1, 0);
+            if (msg) {
+                outBuf.clear();
+                moreInf = pClient->pCourier->notPExpToString(outBuf, i * 10, i * 10 + 9);
+                i++;
+                send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+            }
+            else
+                break;
         }
-        while (courierNum != "#") {
+        msg = 0;
+        send(pClient->cliSock, &msg, 1, 0);
+
+        while (true) {
+            unsigned int courierNum;
+            int len = recv(pClient->cliSock, (char*)&courierNum, 4, 0);
+            if (len < 4)
+                break;
             try {
-                Express* pExpress = main.pLogistics->findExpress(stoul(courierNum));
-                if (pExpress->getCourier() == main.pCourier->getUsername())
-                    main.pLogistics->pickUpExpress(pExpress);
-                else
-                    cout << "You can not pick up this express" << endl;
+                Express* pExpress = pLogistics->findExpress(courierNum);
+                if (pExpress->getCourier() == pClient->pCourier->getUsername()) {
+                    mutx.lock();
+                    pLogistics->pickUpExpress(pExpress);
+                    mutx.unlock();
+                    char msg = SUCCESS;
+                    send(pClient->cliSock, &msg, 1, 0);
+                }                    
+                else {
+                    char msg = ITEM_NOT_BELONG_TO_YOU;
+                    send(pClient->cliSock, &msg, 1, 0);
+                }    
             }
             catch (const char* msg) {
-                cout << msg << endl;
-            }
-            i++;
-            cout << i << ": ";
-            cin >> courierNum;
-            while (!(regex_match(courierNum, r) || courierNum == "#")) {
-                cout << "Format error, please input a 10-digits courier number or '#'" << endl;
-                cout << i << ": ";
-                cin >> courierNum;
+                send(pClient->cliSock, msg, 1, 0);
             }
         }
+        break;
+    }
+    case DSPLYNPEXP: {
+        int i = 0;
+        bool moreInf;
+        try {
+            moreInf = pClient->pCourier->notPExpToString(outBuf, i * 10, i * 10 + 9);
+        }
+        catch (const char* msg) {
+            send(pClient->cliSock, msg, 1, 0);
+            break;
+        }
+        char msg = SUCCESS;
+        send(pClient->cliSock, &msg, 1, 0);
+        i++;
+        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        char msg = 1;
+        while (moreInf) {
+            send(pClient->cliSock, &msg, 1, 0);
+
+            recv(pClient->cliSock, &msg, 1, 0);
+            if (msg) {
+                outBuf.clear();
+                moreInf = pClient->pCourier->notPExpToString(outBuf, i * 10, i * 10 + 9);
+                i++;
+                send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+            }
+            else
+                break;
+        }
+        msg = 0;
+        send(pClient->cliSock, &msg, 1, 0);
+        break;
+    }
+
+    case DSPLYNREXP: {
+        int i = 0;
+        bool moreInf;
+        try {
+            moreInf = pClient->pCourier->notPExpToString(outBuf, i * 10, i * 10 + 9);
+        }
+        catch (const char* msg) {
+            send(pClient->cliSock, msg, 1, 0);
+            break;
+        }
+        char msg = SUCCESS;
+        send(pClient->cliSock, &msg, 1, 0);
+        i++;
+        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        char msg = 1;
+        while (moreInf) {
+            send(pClient->cliSock, &msg, 1, 0);
+
+            recv(pClient->cliSock, &msg, 1, 0);
+            if (msg) {
+                outBuf.clear();
+                moreInf = pClient->pCourier->notRExpToString(outBuf, i * 10, i * 10 + 9);
+                i++;
+                send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+            }
+            else
+                break;
+        }
+        msg = 0;
+        send(pClient->cliSock, &msg, 1, 0);
+        break;
+    }
+    case DESPLREXP: {
+        int i = 0;
+        bool moreInf;
+        try {
+            moreInf = pClient->pCourier->notPExpToString(outBuf, i * 10, i * 10 + 9);
+        }
+        catch (const char* msg) {
+            send(pClient->cliSock, msg, 1, 0);
+            break;
+        }
+        char msg = SUCCESS;
+        send(pClient->cliSock, &msg, 1, 0);
+        i++;
+        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        char msg = 1;
+        while (moreInf) {
+            send(pClient->cliSock, &msg, 1, 0);
+
+            recv(pClient->cliSock, &msg, 1, 0);
+            if (msg) {
+                outBuf.clear();
+                moreInf = pClient->pCourier->rExpToString(outBuf, i * 10, i * 10 + 9);
+                i++;
+                send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+            }
+            else
+                break;
+        }
+        msg = 0;
+        send(pClient->cliSock, &msg, 1, 0);
+        break;
+    }
+    case SRCHSENDER: {
+        string sender;
+        recvInf >> sender;
+        try {
+            vector<const Express*> expresses = pClient->pCourier->searchSender(sender); 
+            char msg = SUCCESS;
+            send(pClient->cliSock, &msg, 1, 0);
+            int i = 0, j = 0; 
+            for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
+                outBuf << "[" << j << "]" << endl;
+                outBuf << expresses.at(j) << endl;
+            }
+            send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+            i++;
+            char msg = 1;
+            while (j < expresses.size()) {
+                send(pClient->cliSock, &msg, 1, 0);
+
+                recv(pClient->cliSock, &msg, 1, 0);
+                if (msg) {
+                    outBuf.clear();
+                    for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
+                        outBuf << "[" << j << "]" << endl;
+                        outBuf << expresses.at(j) << endl;
+                    }
+                    i++;
+                    send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+                }
+                else
+                    break;
+            }
+            msg = 0;
+            send(pClient->cliSock, &msg, 1, 0);
+        }
+        catch (const char* msg) {
+            send(pClient->cliSock, msg, 1, 0);
+        }
+        break;
+    }
+    case SRCHRECEIVER: {
+        string receiver;
+        recvInf >> receiver;
+        try {
+            vector<const Express*> expresses = pClient->pCourier->searchReceiver(receiver);
+            char msg = SUCCESS;
+            send(pClient->cliSock, &msg, 1, 0);
+            int i = 0, j = 0;
+            for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
+                outBuf << "[" << j << "]" << endl;
+                outBuf << expresses.at(j) << endl;
+            }
+            send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+            i++;
+            char msg = 1;
+            while (j < expresses.size()) {
+                send(pClient->cliSock, &msg, 1, 0);
+
+                recv(pClient->cliSock, &msg, 1, 0);
+                if (msg) {
+                    outBuf.clear();
+                    for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
+                        outBuf << "[" << j << "]" << endl;
+                        outBuf << expresses.at(j) << endl;
+                    }
+                    i++;
+                    send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+                }
+                else
+                    break;
+            }
+            msg = 0;
+            send(pClient->cliSock, &msg, 1, 0);
+        }
+        catch (const char* msg) {
+            send(pClient->cliSock, msg, 1, 0);
+        }
+        break;
+    }
+    case SRCHPICKTM: {
+        struct tm lowerBound;
+        recvInf >> get_time(&lowerBound, "%Y-%m-%d %H:%M:%S");
+        struct tm upperBound;
+        recvInf >> get_time(&upperBound, "%Y-%m-%d %H:%M:%S");
+        try {
+            vector<const Express*> expresses = pClient->pCourier->searchPickTime(mktime(&lowerBound), mktime(&upperBound));
+            char msg = SUCCESS;
+            send(pClient->cliSock, &msg, 1, 0);
+            int i = 0, j = 0;
+            for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
+                outBuf << "[" << j << "]" << endl;
+                outBuf << expresses.at(j) << endl;
+            }
+            send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+            i++;
+            char msg = 1;
+            while (j < expresses.size()) {
+                send(pClient->cliSock, &msg, 1, 0);
+
+                recv(pClient->cliSock, &msg, 1, 0);
+                if (msg) {
+                    outBuf.clear();
+                    for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
+                        outBuf << "[" << j << "]" << endl;
+                        outBuf << expresses.at(j) << endl;
+                    }
+                    i++;
+                    send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+                }
+                else
+                    break;
+            }
+            msg = 0;
+            send(pClient->cliSock, &msg, 1, 0);
+        }
+        catch (const char* msg) {
+            send(pClient->cliSock, msg, 1, 0);
+        }
+        break;
+    }
+    case FINDEXP: {
+        string courierNum;
+        recvInf >> courierNum;
+        try {
+            outBuf << *pLogistics->findExpress(stoul(courierNum)) << endl;
+            char msg = SUCCESS;
+            send(pClient->cliSock, &msg, 1, 0);
+            send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        }
+        catch (const char* msg) {
+            send(pClient->cliSock, msg, 1, 0);
+        }
+        break;
     }
     default:
         return false;

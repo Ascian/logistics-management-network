@@ -141,41 +141,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Account.cpp" />
-    <ClCompile Include="Book.cpp" />
     <ClCompile Include="ConsoleModule.cpp" />
-    <ClCompile Include="Courier.cpp" />
     <ClCompile Include="CourierModule.cpp" />
-    <ClCompile Include="Express.cpp" />
-    <ClCompile Include="Fragile.cpp" />
     <ClCompile Include="LogisticsManagementClient.cpp" />
-    <ClCompile Include="Logistics.cpp" />
     <ClCompile Include="MainModule.cpp" />
-    <ClCompile Include="Manager.cpp" />
     <ClCompile Include="ManagerModule.cpp" />
-    <ClCompile Include="NormalExpress.cpp" />
     <ClCompile Include="ReceiverModule.cpp" />
     <ClCompile Include="SenderModule.cpp" />
-    <ClCompile Include="User.cpp" />
     <ClCompile Include="UserModule.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Account.h" />
-    <ClInclude Include="Book.h" />
     <ClInclude Include="ConsoleModule.h" />
-    <ClInclude Include="Courier.h" />
     <ClInclude Include="CourierModule.h" />
     <ClInclude Include="Event.h" />
-    <ClInclude Include="Express.h" />
-    <ClInclude Include="Fragile.h" />
-    <ClInclude Include="Logistics.h" />
     <ClInclude Include="MainModule.h" />
-    <ClInclude Include="Manager.h" />
     <ClInclude Include="ManagerModule.h" />
-    <ClInclude Include="NormalExpress.h" />
     <ClInclude Include="ReceiverModule.h" />
     <ClInclude Include="SenderModule.h" />
-    <ClInclude Include="User.h" />
     <ClInclude Include="UserModule.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -42,7 +42,7 @@ public:
     inline unsigned int notPickedListSize() { return notPickedList.size(); }
 
     //展示所有待揽收快递信息
-    const bool notPExpressToString(ostringstream& oss, const int begin, const int end);
+    const bool notPExpToString(ostringstream& oss, const int begin, const int end);
 
     //展示所有待签收快递信息
     const bool notRExpToString(ostringstream& oss, const int begin, const int end);

@@ -17,6 +17,7 @@ const int MAX_LINK_NUM = 10;
 void initLogistics();
 void serverWorking(Client* pClient);
 
+mutex mutx;
 Logistics* pLogistics;
 Client clients[MAX_LINK_NUM];
 
@@ -138,7 +139,7 @@ void serverWorking(Client* pClient)
     bool ret = false;
     while (!ret) {
         recv(pClient->cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
-        ret = pMainModule->parse(pLogistics, pClient, recvBuf, {});
+        ret = pMainModule->parse(pLogistics, pClient, recvBuf, mutx);
     }
     delete(recvBuf);
     delete(pMainModule);

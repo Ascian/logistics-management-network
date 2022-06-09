@@ -18,7 +18,7 @@ const bool User::sExpToString(ostringstream& oss, const int begin, const int end
     return false;
 }
 
-const bool User::notPExpressToString(ostringstream& oss, const int begin, const int end)
+const bool User::notPExpToString(ostringstream& oss, const int begin, const int end)
 {
     if (notPickedList.size() == 0) {
         throw(CONTAINER_EMPTY);

@@ -6,7 +6,7 @@ class SenderModule :
 public:
     SenderModule()
         :ConsoleModule("sender") {
-        commands = { "return", "dsplynsexp", "dsplysexp", "srchreceiver", 
+        commands = { "return", "dsplynsexp", "dsplysexp", "srchreceiver",
             "srchsendtm", "help" };
     }
 

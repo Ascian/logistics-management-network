@@ -15,6 +15,6 @@ public:
         subModules = { new UserModule(), new CourierModule(), new ManagerModule()};
     }
 
-    virtual bool execute(Logistics* pLogistics, Client* pClient, const char* recvBuf);
+    virtual bool execute(Logistics* pLogistics, Client* pClient, const char* recvBuf, mutex& mutx);
 };
 

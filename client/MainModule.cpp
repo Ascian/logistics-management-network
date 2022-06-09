@@ -25,7 +25,7 @@ bool MainModule::execute(SOCKET& cliSock, const string& command, const set<int>&
             cin >> password;
         }
 
-        outBuf << username << endl << password << endl;
+        outBuf << USER << username << endl << password << endl;
         send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
 
         char msg;
@@ -59,7 +59,7 @@ bool MainModule::execute(SOCKET& cliSock, const string& command, const set<int>&
             cin >> password;
         }
 
-        outBuf << username << endl << password << endl;
+        outBuf << COURIER << username << endl << password << endl;
         send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
 
         char msg;
@@ -93,7 +93,7 @@ bool MainModule::execute(SOCKET& cliSock, const string& command, const set<int>&
             cin >> password;
         }
 
-        outBuf << username << endl << password << endl;
+        outBuf << MANAGER << username << endl << password << endl;
         send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
 
         char msg;
@@ -153,7 +153,7 @@ bool MainModule::execute(SOCKET& cliSock, const string& command, const set<int>&
             cin >> address;
         }
 
-        outBuf << username << endl << password << endl << name << endl << 
+        outBuf << REGISTER << username << endl << password << endl << name << endl << 
             phone << endl << address << endl;
         send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
 
