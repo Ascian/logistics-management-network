@@ -3,6 +3,13 @@
 #include "CourierModule.h"
 #include "UserModule.h"
 
+enum EVENT : uint8_t
+{
+    RETURN, CHECK, PASSWORD, NAME, ADDCOURIER, DELETECOURIER, ASSIGN, DSPLYUSER,
+    DSPLYCOURIER, DSPLYEXP, SRCHCREATETM, FINDUSER, FINDCOURIER, FINDEXP
+};
+
+
 class ManagerModule :
     public ConsoleModule
 {

@@ -161,7 +161,7 @@ bool MainModule::execute(SOCKET& cliSock, const string& command, const set<int>&
         recv(cliSock, &msg, 1, 0);
 
         if (msg == SUCCESS) {
-            cout << "Register succeed" << endl;
+            cout << "Succeed to register" << endl;
         }
         else if (msg == ELEMENT_EXCEED_LIMIT) {
             cout << "Username amount reached the Maximum" << endl;

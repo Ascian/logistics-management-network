@@ -1,28 +1,32 @@
 #include "UserModule.h"
 
-bool UserModule::execute(Main& main, const string& command, const set<int> ban)
+bool UserModule::execute(SOCKET& cliSock, const string& command, const set<int>& ban)
 {
-    if (command == commands.at(0) && !ban.contains(0))  
+    ostringstream outBuf;
+    if (command == commands.at(0) && !ban.contains(0)) {
+        outBuf << RETURN;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
         return true;
-    else if (command == commands.at(1) && !ban.contains(1)) 
-        cout << *main.user << endl;
+    }
+    else if (command == commands.at(1) && !ban.contains(1)) {
+        outBuf << CHECK;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+
+        char recvBuf[MAX_BUFFER_SIZE];
+        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        cout << recvBuf;
+    }
     else if (command == commands.at(2) && !ban.contains(2)) {
-        cout << "Please input your current password: ";
+        cout << "Please input your new password: ";
         string password;
         cin >> password;
-        if (password == main.user->getPassword()) {
+        while (password.size() > STRING_MAX_SIZE) {
+            cout << "Password length should be less than " << STRING_MAX_SIZE << endl;
             cout << "Please input your new password: ";
             cin >> password;
-            while (password.size() > STRING_MAX_SIZE) {
-                cout << "Password length should be less than " << STRING_MAX_SIZE << endl;
-                cout << "Please input your new password: ";
-                cin >> password;
-            }
-            main.user->setPassword(password);
         }
-        else {
-            cout << "Password error" << endl;
-        }
+        outBuf << PASSWORD << password << endl;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
     }
     else if (command == commands.at(3) && !ban.contains(3)) {
         cout << "Please input your new name: ";
@@ -33,7 +37,8 @@ bool UserModule::execute(Main& main, const string& command, const set<int> ban)
             cout << "Please input your new name: ";
             cin >> name;
         }
-        main.user->setName(name);
+        outBuf << NAME << name << endl;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
     }
     else if (command == commands.at(4) && !ban.contains(4)) {
         cout << "Please input your new phone number: ";
@@ -42,10 +47,11 @@ bool UserModule::execute(Main& main, const string& command, const set<int> ban)
         regex r("^\\d+$");
         while (!regex_match(phone, r) || phone.length() > 11) {
             cout << "Format error, phone number consists of up to 11 digits" << endl;
-            cout << "Phone Number: ";
+            cout << "Please input your new phone number: ";
             cin >> phone;
         }
-        main.user->setPhone(stoull(phone));
+        outBuf << PHONE << phone << endl;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
     }
     else if (command == commands.at(5) && !ban.contains(5)) {
         cout << "Please input your new address: ";
@@ -56,7 +62,8 @@ bool UserModule::execute(Main& main, const string& command, const set<int> ban)
             cout << "Please input your new address: ";
             cin >> address;
         }
-        main.user->setAddress(address);
+        outBuf << ADDRESS << address << endl;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
     }
     else if (command == commands.at(6) && !ban.contains(6)) {
         cout << "Please input the amount of money you want to recharge: ";
@@ -71,7 +78,8 @@ bool UserModule::execute(Main& main, const string& command, const set<int> ban)
             cout << "Please input the amount of money you want to recharge: ";
             cin >> money;
         }
-        main.user->addBalance(stoul(money));
+        outBuf << RECHARGE << money << endl;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
     }
     else if (command == commands.at(7) && !ban.contains(7)) {
         cout << "Please input the express information" << endl;
@@ -85,10 +93,10 @@ bool UserModule::execute(Main& main, const string& command, const set<int> ban)
         string description;
         cin >> description;
         cout << "Kind(";
-        for (int i = 0; i < Express::subKind().size() - 1; i++) {
-            cout << Express::subKind().at(i) << "/";
+        for (int i = 0; i < Express_subKind().size() - 1; i++) {
+            cout << Express_subKind().at(i) << "/";
         }
-        cout << Express::subKind().at(Express::subKind().size() - 1) << "): ";
+        cout << Express_subKind().at(Express_subKind().size() - 1) << "): ";
         string kind;
         cin >> kind;
         cout << "Amount: ";
@@ -103,76 +111,143 @@ bool UserModule::execute(Main& main, const string& command, const set<int> ban)
             cout << "Amount: ";
             cin >> amount;
         }
-        try {
-            main.logistics->createLogistics(main.user->getUsername(), receiver, condition, description, stoul(amount), kind);
+
+        outBuf << SEND << receiver << endl << condition << endl << description << endl << 
+            kind << endl << amount << endl;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+
+        char msg;
+        recv(cliSock, &msg, 1, 0);
+
+        if (msg == SUCCESS) {
+            cout << "Succeed to send an express" << endl;
         }
-        catch (const char* msg) {
-            cout << msg << endl;
+        else if (msg == RECEIVER_EQUAL_SENDER) {
+            cout << "You can not send an express to yourself" << endl;
+        }
+        else if (msg == RECEIVER_NOT_EXIST) {
+            cout << "Receiver does not exist" << endl;
+        }
+        else if(msg == ELEMENT_EXCEED_LIMIT) {
+            cout << "Express amount exceeds the limit" << endl;
+        }
+        else if(msg == EXPRESS_UNKNOWN_KIND) {
+            cout << "Unknown kind" << endl;
+        }
+        else {
+            cout << "Balance not enough" << endl;
         }
     }
     else if (command == commands.at(8) && !ban.contains(8)) {
-        cout << "Not signed-for expresses:" << endl;
-        try {
-            main.user->displayNRExp();
-        }
-        catch (const char* msg) {
-            cout << msg << endl;
+        outBuf << SIGNFOR;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        cout << "Not received expresses:" << endl;
+        char msg;
+        recv(cliSock, &msg, 1, 0);
+
+        if (msg == CONTAINER_EMPTY) {
+            cout << "No not-received express" << endl;
             return false;
         }
-        cout << endl;
+        
+        char recvBuf[MAX_BUFFER_SIZE];
+        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        cout << recvBuf << endl;
+
+        recv(cliSock, &msg, 1, 0);
+        while (msg) {
+            cout << "Display more information(Y/N):";
+            string more;
+            cin >> more;
+            while (more != "Y" && more != "y" && more != "N" && more != "n") {
+                cout << "Input error" << endl;
+                cout << "Display more information(Y/N):";
+            }
+            if (more == "Y" || more == "y") {
+                msg = 1;
+                send(cliSock, &msg, 1, 0);
+                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                cout << recvBuf << endl;
+            }
+            else {
+                msg = 0;
+                send(cliSock, &msg, 1, 0);
+            }
+            recv(cliSock, &msg, 1, 0);
+        }
+
         cout << "Please input the courier numbers of the expresses you want to sign for" << endl;
         cout << "Note: input '#' as the end" << endl;
         unsigned int i = 1;
-        cout << i << ": ";
-        string courierNum;
-        cin >> courierNum;
-        regex r("[0-9]{10}");
-        while (!(regex_match(courierNum, r) || courierNum == "#")) {
-            cout << "Format error, please input a 10-digits courier number or '#'" << endl;
+  
+        while (true) {
             cout << i << ": ";
+            string courierNum;
             cin >> courierNum;
-        } 
-        while (courierNum != "#") {
-            try {
-                Express* pExpress = main.logistics->findExpress(stoul(courierNum));
-                if (pExpress->getReceiver() == main.user->getUsername())
-                    main.logistics->signForExpress(pExpress);
-                else
-                    cout << "You can not sign for this express" << endl;
-            }
-            catch (const char* msg) {
-                cout << msg << endl;
-            }
-            i++;
-            cout << i << ": ";
-            cin >> courierNum;
+            regex r("[0-9]{10}");
             while (!(regex_match(courierNum, r) || courierNum == "#")) {
                 cout << "Format error, please input a 10-digits courier number or '#'" << endl;
                 cout << i << ": ";
                 cin >> courierNum;
             }
+
+            if (courierNum == "#") {
+                send(cliSock, courierNum.c_str(), 1, 0);
+                break;
+            }
+            unsigned int num = stoul(courierNum);
+            send(cliSock, (char*)&num, 4, 0);
+
+            recv(cliSock, &msg, 1, 0);
+            if (msg == ITEM_NOT_BELONG_TO_YOU) {
+                cout << "You can not sign for this express" << endl;
+            }
+            else if (msg == EXPRESS_ALREADY_SIGNFOR) {
+                cout << "This express is already signed for" << endl;
+            }
+            else if (msg == ELEMENT_NOT_FOUND) {
+                cout << "No such express" << endl;
+            }
+            else if (msg == EXPRESS_FORBIT_SIGNFOR) {
+                cout << "This express is not sended yet" << endl;
+            }
         }
     }
-    else if (command == commands.at(9) && !ban.contains(9)) 
+    else if (command == commands.at(9) && !ban.contains(9)) {
+        outBuf << SENDINFRM;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
         currentModule = 0;
-    else if (command == commands.at(10) && !ban.contains(10)) 
+    }
+    else if (command == commands.at(10) && !ban.contains(10)) {
+        outBuf << RECEIVEINFRM;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
         currentModule = 1;
+    }
     else if (command == commands.at(11) && !ban.contains(11)) {
         cout << "Please input the courier number: ";
         string courierNum;
         cin >> courierNum;
         regex r("[0-9]{10}");
-        while(!regex_match(courierNum, r)) {
+        while (!regex_match(courierNum, r)) {
             cout << "Format error, courier number has 10 digits" << endl;
             cout << "Please input the courier number: ";
             cin >> courierNum;
         }
-        try {
-            cout << *main.logistics->findExpress(stoul(courierNum)) << endl;
+        
+        outBuf << FINDEXP << courierNum << endl;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+
+        char msg;
+        recv(cliSock, &msg, 1, 0);
+
+        if (msg == ELEMENT_NOT_FOUND) {
+            cout << "No express whose courier number is " << courierNum << endl;
+            return false;
         }
-        catch (const char* msg) {
-            cout << msg << endl;
-        }
+
+        char recvBuf[MAX_BUFFER_SIZE];
+        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        cout << recvBuf << endl;
     }
     else if (command == commands.at(12) && !ban.contains(12)) {
         cout << "Available commands:" << endl;

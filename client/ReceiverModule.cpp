@@ -1,67 +1,212 @@
 #include "ReceiverModule.h"
 
-bool ReceiverModule::execute(Main& main, const string& command, const set<int> ban)
+bool ReceiverModule::execute(SOCKET& cliSock, const string& command, const set<int>& ban)
 {
-    if (command == commands.at(0) && !ban.contains(0))  
+    ostringstream outBuf;
+    if (command == commands.at(0) && !ban.contains(0)) {
+        outBuf << RETURN;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
         return true;
+    }
     else if (command == commands.at(1) && !ban.contains(1)) {
-        try {
-            main.user->displayNPExp();
-            cout << endl;
+        outBuf << DSPLYNPEXP;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        cout << "Not picked-up expresses:" << endl;
+        char msg;
+        recv(cliSock, &msg, 1, 0);
+
+        if (msg == CONTAINER_EMPTY) {
+            cout << "No not-picked-up express" << endl;
+            return false;
         }
-        catch (const char* msg) {
-            cout << msg << endl;
+
+        char recvBuf[MAX_BUFFER_SIZE];
+        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        cout << recvBuf << endl;
+
+        recv(cliSock, &msg, 1, 0);
+        while (msg) {
+            cout << "Display more information(Y/N):";
+            string more;
+            cin >> more;
+            while (more != "Y" && more != "y" && more != "N" && more != "n") {
+                cout << "Input error" << endl;
+                cout << "Display more information(Y/N):";
+            }
+            if (more == "Y" || more == "y") {
+                msg = 1;
+                send(cliSock, &msg, 1, 0);
+                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                cout << recvBuf << endl;
+            }
+            else {
+                msg = 0;
+                send(cliSock, &msg, 1, 0);
+            }
+            recv(cliSock, &msg, 1, 0);
         }
     }
     else if (command == commands.at(2) && !ban.contains(2)) {
-        try {
-            main.user->displayNRExp();
-            cout << endl;
+        outBuf << DSPLYNREXP;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        cout << "Not received expresses:" << endl;
+        char msg;
+        recv(cliSock, &msg, 1, 0);
+
+        if (msg == CONTAINER_EMPTY) {
+            cout << "No not-received express" << endl;
+            return false;
         }
-        catch (const char* msg) {
-            cout << msg << endl;
+
+        char recvBuf[MAX_BUFFER_SIZE];
+        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        cout << recvBuf << endl;
+
+        recv(cliSock, &msg, 1, 0);
+        while (msg) {
+            cout << "Display more information(Y/N):";
+            string more;
+            cin >> more;
+            while (more != "Y" && more != "y" && more != "N" && more != "n") {
+                cout << "Input error" << endl;
+                cout << "Display more information(Y/N):";
+            }
+            if (more == "Y" || more == "y") {
+                msg = 1;
+                send(cliSock, &msg, 1, 0);
+                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                cout << recvBuf << endl;
+            }
+            else {
+                msg = 0;
+                send(cliSock, &msg, 1, 0);
+            }
+            recv(cliSock, &msg, 1, 0);
         }
     }
     else if (command == commands.at(3) && !ban.contains(3)) {
-        try {
-            main.user->displayRExp();
-            cout << endl;
+        outBuf << DSPLYREXP;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        cout << "Received expresses:" << endl;
+        char msg;
+        recv(cliSock, &msg, 1, 0);
+
+        if (msg == CONTAINER_EMPTY) {
+            cout << "No received express" << endl;
+            return false;
         }
-        catch (const char* msg) {
-            cout << msg << endl;
+
+        char recvBuf[MAX_BUFFER_SIZE];
+        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        cout << recvBuf << endl;
+
+        recv(cliSock, &msg, 1, 0);
+        while (msg) {
+            cout << "Display more information(Y/N):";
+            string more;
+            cin >> more;
+            while (more != "Y" && more != "y" && more != "N" && more != "n") {
+                cout << "Input error" << endl;
+                cout << "Display more information(Y/N):";
+            }
+            if (more == "Y" || more == "y") {
+                msg = 1;
+                send(cliSock, &msg, 1, 0);
+                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                cout << recvBuf << endl;
+            }
+            else {
+                msg = 0;
+                send(cliSock, &msg, 1, 0);
+            }
+            recv(cliSock, &msg, 1, 0);
         }
     }
     else if (command == commands.at(4) && !ban.contains(4)) {
         cout << "Please input the sender's username: ";
         string sender;
         cin >> sender;
-        cout << endl;
-        try {
-            vector<const Express*> expresses = main.user->searchSender(sender);
-            for (auto temp : expresses)
-                cout << *((Express*)temp) << endl;
+        outBuf << SRCHSENDER << sender << endl;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+
+        char msg;
+        recv(cliSock, &msg, 1, 0);
+
+        if (msg == ELEMENT_NOT_FOUND) {
+            cout << "No express sended by " << sender << endl;
+            return false;
         }
-        catch (const char* msg) {
-            cout << msg << endl;
+
+        char recvBuf[MAX_BUFFER_SIZE];
+        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        cout << recvBuf << endl;
+
+        recv(cliSock, &msg, 1, 0);
+        while (msg) {
+            cout << "Display more information(Y/N):";
+            string more;
+            cin >> more;
+            while (more != "Y" && more != "y" && more != "N" && more != "n") {
+                cout << "Input error" << endl;
+                cout << "Display more information(Y/N):";
+            }
+            if (more == "Y" || more == "y") {
+                msg = 1;
+                send(cliSock, &msg, 1, 0);
+                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                cout << recvBuf << endl;
+            }
+            else {
+                msg = 0;
+                send(cliSock, &msg, 1, 0);
+            }
+            recv(cliSock, &msg, 1, 0);
         }
     }
     else if (command == commands.at(5) && !ban.contains(5)) {
         cout << "Please input the time information in format %Y-%m-%d %H:%M:%S" << endl;
         cout << "Lower Bound: ";
-        struct tm lowerBound;
-        cin >> get_time(&lowerBound, "%Y-%m-%d %H:%M:%S");
-        cout << "Upper Bound: ";
-        struct tm upperBound;
-        cin >> get_time(&upperBound, "%Y-%m-%d %H:%M:%S");
-        cout << endl;
-        try {
-            vector<const Express*> expresses = main.user->searchReceiveTime(mktime(&lowerBound), mktime(&upperBound));
-            for (auto temp : expresses) {
-                cout << *((Express*)temp) << endl;
-            }
+        char lowerBound[20];
+        cin .getline(lowerBound, 20);
+        cout << "Upper Bound: ";     
+        char upperBound[20];
+        cin.getline(upperBound, 20);
+
+        outBuf << SRCHRECEIVETM << lowerBound << endl << upperBound << endl;
+        send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+
+        char msg;
+        recv(cliSock, &msg, 1, 0);
+
+        if (msg == ELEMENT_NOT_FOUND) {
+            cout << "No express received between " << lowerBound << "and " << upperBound << endl;
+            return false;
         }
-        catch (const char* msg) {
-            cout << msg << endl;
+
+        char recvBuf[MAX_BUFFER_SIZE];
+        recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+        cout << recvBuf << endl;
+
+        recv(cliSock, &msg, 1, 0);
+        while (msg) {
+            cout << "Display more information(Y/N):";
+            string more;
+            cin >> more;
+            while (more != "Y" && more != "y" && more != "N" && more != "n") {
+                cout << "Input error" << endl;
+                cout << "Display more information(Y/N):";
+            }
+            if (more == "Y" || more == "y") {
+                msg = 1;
+                send(cliSock, &msg, 1, 0);
+                recv(cliSock, recvBuf, MAX_BUFFER_SIZE, 0);
+                cout << recvBuf << endl;
+            }
+            else {
+                msg = 0;
+                send(cliSock, &msg, 1, 0);
+            }
+            recv(cliSock, &msg, 1, 0);
         }
     }
     else if (command == commands.at(6) && !ban.contains(6)) {

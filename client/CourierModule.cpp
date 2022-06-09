@@ -91,7 +91,7 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
             recv(cliSock, &msg, 1, 0);
         }
 
-        cout << "Please input the courier numbers of not expresses you want to pick up" << endl;
+        cout << "Please input the courier numbers of the expresses you want to pick up" << endl;
         cout << "Note: input '#' as the end" << endl;
         unsigned int i = 1;
   
@@ -119,6 +119,9 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
             }
             else if (msg == EXPRESS_ALREADY_PICKUP) {
                 cout << "This express is already picked up" << endl;
+            }
+            else if (msg == ELEMENT_NOT_FOUND) {
+                cout << "No such express" << endl;
             }
         }
     }

@@ -1,87 +1,204 @@
 #include "ReceiverModule.h"
 
-bool ReceiverModule::execute(Main& main, const string& command, const set<int> ban)
+bool ReceiverModule::execute(Logistics* pLogistics, Client* pClient, const char* recvBuf, mutex& mutx)
 {
-    if (command == commands.at(0) && !ban.contains(0))  
+    ostringstream outBuf;
+    istringstream recvInf(recvBuf);
+    char event;
+    recvInf >> event;
+    switch (event) {
+    case RETURN: {
         return true;
-    else if (command == commands.at(1) && !ban.contains(1)) {
+        break;
+    }
+    case DSPLYNPEXP: {
+        int i = 0;
+        bool moreInf;
         try {
-            main.pUser->notPExpToString();
-            cout << endl;
+            moreInf = pClient->pUser->notPExpToString(outBuf, i * 10, i * 10 + 9);
         }
         catch (const char* msg) {
-            cout << msg << endl;
+            send(pClient->cliSock, msg, 1, 0);
+            break;
         }
-    }
-    else if (command == commands.at(2) && !ban.contains(2)) {
-        try {
-            main.pUser->notRExpToString();
-            cout << endl;
-        }
-        catch (const char* msg) {
-            cout << msg << endl;
-        }
-    }
-    else if (command == commands.at(3) && !ban.contains(3)) {
-        try {
-            main.pUser->rExpToString();
-            cout << endl;
-        }
-        catch (const char* msg) {
-            cout << msg << endl;
-        }
-    }
-    else if (command == commands.at(4) && !ban.contains(4)) {
-        cout << "Please input the sender's username: ";
-        string sender;
-        cin >> sender;
-        cout << endl;
-        try {
-            vector<const Express*> expresses = main.pUser->searchSender(sender);
-            for (auto temp : expresses)
-                cout << *((Express*)temp) << endl;
-        }
-        catch (const char* msg) {
-            cout << msg << endl;
-        }
-    }
-    else if (command == commands.at(5) && !ban.contains(5)) {
-        cout << "Please input the time information in format %Y-%m-%d %H:%M:%S" << endl;
-        cout << "Lower Bound: ";
-        struct tm lowerBound;
-        cin >> get_time(&lowerBound, "%Y-%m-%d %H:%M:%S");
-        cout << "Upper Bound: ";
-        struct tm upperBound;
-        cin >> get_time(&upperBound, "%Y-%m-%d %H:%M:%S");
-        cout << endl;
-        try {
-            vector<const Express*> expresses = main.pUser->searchReceiveTime(mktime(&lowerBound), mktime(&upperBound));
-            for (auto temp : expresses) {
-                cout << *((Express*)temp) << endl;
+
+        char msg = SUCCESS;
+        send(pClient->cliSock, &msg, 1, 0);
+
+        i++;
+        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        char msg = 1;
+        while (moreInf) {
+            send(pClient->cliSock, &msg, 1, 0);
+
+            recv(pClient->cliSock, &msg, 1, 0);
+            if (msg) {
+                outBuf.clear();
+                moreInf = pClient->pUser->notPExpToString(outBuf, i * 10, i * 10 + 9);
+                i++;
+                send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
             }
+            else
+                break;
+        }
+        msg = 0;
+        send(pClient->cliSock, &msg, 1, 0);
+        break;
+    }
+
+    case DSPLYNREXP: {
+        int i = 0;
+        bool moreInf;
+        try {
+            moreInf = pClient->pUser->notPExpToString(outBuf, i * 10, i * 10 + 9);
         }
         catch (const char* msg) {
-            cout << msg << endl;
+            send(pClient->cliSock, msg, 1, 0);
+            break;
         }
+
+        char msg = SUCCESS;
+        send(pClient->cliSock, &msg, 1, 0);
+
+        i++;
+        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        char msg = 1;
+        while (moreInf) {
+            send(pClient->cliSock, &msg, 1, 0);
+
+            recv(pClient->cliSock, &msg, 1, 0);
+            if (msg) {
+                outBuf.clear();
+                moreInf = pClient->pUser->notRExpToString(outBuf, i * 10, i * 10 + 9);
+                i++;
+                send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+            }
+            else
+                break;
+        }
+        msg = 0;
+        send(pClient->cliSock, &msg, 1, 0);
+        break;
     }
-    else if (command == commands.at(6) && !ban.contains(6)) {
-        cout << "Available commands:" << endl;
-        if (!ban.contains(0))
-            cout << "  " << commands.at(0) << ": return to the upper module" << endl;
-        if (!ban.contains(1))
-            cout << "  " << commands.at(1) << ": display all not picked-up expresses' message" << endl;
-        if (!ban.contains(2))
-            cout << "  " << commands.at(2) << ": display all not received expresses' message" << endl;
-        if (!ban.contains(3))
-            cout << "  " << commands.at(3) << ": display all received expresses' message" << endl;
-        if (!ban.contains(4))
-            cout << "  " << commands.at(4) << ": search the related expresses by sender" << endl;
-        if (!ban.contains(5))
-            cout << "  " << commands.at(5) << ": search the related expresses by receiving time" << endl;
-        if (!ban.contains(6))
-            cout << "  " << commands.at(6) << ": print this help" << endl;
+    case DSPLYREXP: {
+        int i = 0;
+        bool moreInf;
+        try {
+            moreInf = pClient->pUser->notPExpToString(outBuf, i * 10, i * 10 + 9);
+        }
+        catch (const char* msg) {
+            send(pClient->cliSock, msg, 1, 0);
+            break;
+        }
+
+        char msg = SUCCESS;
+        send(pClient->cliSock, &msg, 1, 0);
+
+        i++;
+        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        char msg = 1;
+        while (moreInf) {
+            send(pClient->cliSock, &msg, 1, 0);
+
+            recv(pClient->cliSock, &msg, 1, 0);
+            if (msg) {
+                outBuf.clear();
+                moreInf = pClient->pUser->rExpToString(outBuf, i * 10, i * 10 + 9);
+                i++;
+                send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+            }
+            else
+                break;
+        }
+        msg = 0;
+        send(pClient->cliSock, &msg, 1, 0);
+        break;
     }
-    else
-        cout << "Unknown command" << endl;
+    case SRCHSENDER: {
+        string sender;
+        recvInf >> sender;
+        try {
+            vector<const Express*> expresses = pClient->pUser->searchSender(sender);
+
+            char msg = SUCCESS;
+            send(pClient->cliSock, &msg, 1, 0);
+
+            int i = 0, j = 0;
+            for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
+                outBuf << "[" << j << "]" << endl;
+                outBuf << expresses.at(j) << endl;
+            }
+            send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+            i++;
+            char msg = 1;
+            while (j < expresses.size()) {
+                send(pClient->cliSock, &msg, 1, 0);
+
+                recv(pClient->cliSock, &msg, 1, 0);
+                if (msg) {
+                    outBuf.clear();
+                    for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
+                        outBuf << "[" << j << "]" << endl;
+                        outBuf << expresses.at(j) << endl;
+                    }
+                    i++;
+                    send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+                }
+                else
+                    break;
+            }
+            msg = 0;
+            send(pClient->cliSock, &msg, 1, 0);
+        }
+        catch (const char* msg) {
+            send(pClient->cliSock, msg, 1, 0);
+        }
+        break;
+    }
+    case SRCHRECEIVETM: {
+        struct tm lowerBound;
+        recvInf >> get_time(&lowerBound, "%Y-%m-%d %H:%M:%S");
+        struct tm upperBound;
+        recvInf >> get_time(&upperBound, "%Y-%m-%d %H:%M:%S");
+
+        try {
+            vector<const Express*> expresses = pClient->pUser->searchReceiveTime(mktime(&lowerBound), mktime(&upperBound));
+            char msg = SUCCESS;
+            send(pClient->cliSock, &msg, 1, 0);
+            int i = 0, j = 0;
+            for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
+                outBuf << "[" << j << "]" << endl;
+                outBuf << expresses.at(j) << endl;
+            }
+            send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+            i++;
+            char msg = 1;
+            while (j < expresses.size()) {
+                send(pClient->cliSock, &msg, 1, 0);
+
+                recv(pClient->cliSock, &msg, 1, 0);
+                if (msg) {
+                    outBuf.clear();
+                    for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
+                        outBuf << "[" << j << "]" << endl;
+                        outBuf << expresses.at(j) << endl;
+                    }
+                    i++;
+                    send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+                }
+                else
+                    break;
+            }
+            msg = 0;
+            send(pClient->cliSock, &msg, 1, 0);
+        }
+        catch (const char* msg) {
+            send(pClient->cliSock, msg, 1, 0);
+        }
+        break;
+    }
+    default:
+        return false;
+    }
     return false;
 }

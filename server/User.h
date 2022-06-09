@@ -64,7 +64,7 @@ public:
     const bool sExpToString(ostringstream& oss, const int begin, const int end);
 
     //展示所有未揽收快递信息
-    const bool notPExpressToString(ostringstream& oss, const int begin, const int end);
+    const bool notPExpToString(ostringstream& oss, const int begin, const int end);
 
     //展示所有未签收快递信息
     const bool notRExpToString(ostringstream& oss, const int begin, const int end);

@@ -1,247 +1,315 @@
-#include "ManagerModule.h"
+#include"ManagerModule.h"
 
-bool ManagerModule::execute(Main& main, const string& command, const set<int> ban)
+bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* recvBuf, mutex& mutx)
 {
-    if (command == commands.at(0) && !ban.contains(0))  return true; 
-    else if (command == commands.at(1) && !ban.contains(1)) {
-        cout << main.pLogistics->manager << endl;
+    ostringstream outBuf;
+    istringstream recvInf(recvBuf);
+    char event;
+    recvInf >> event;
+    switch (event) {
+    case RETURN: {
+        return true;
+        break;
     }
-    else if (command == commands.at(2) && !ban.contains(2)) {
-        cout << "Please input the current password: ";
+    case CHECK: {
+        outBuf << pLogistics->manager;
+        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        break;
+    }
+    case PASSWORD: {
         string password;
-        cin >> password;
-        if (password == main.pLogistics->manager.getPassword()) {
-            cout << "Please input the new password: ";
-            cin >> password;
-            while (password.size() > STRING_MAX_SIZE) {
-                cout << "Password length should be less than " << STRING_MAX_SIZE << endl;
-                cout << "Please input the new password: ";
-                cin >> password;
-            }
-            main.pLogistics->manager.setPassword(password);
-        }
-        else {
-            cout << "Password error" << endl;
-        }
+        recvInf >> password;
+        pLogistics->manager.setPassword(password);
+        break;
     }
-    else if (command == commands.at(3) && !ban.contains(3)) {
-        cout << "Please input the new name: ";
+    case NAME: {
         string name;
-        cin >> name;
-        while (name.size() > STRING_MAX_SIZE) {
-            cout << "Name length should be less than " << STRING_MAX_SIZE << endl;
-            cout << "Please input the new name: ";
-            cin >> name;
-        }
-        main.pLogistics->manager.setName(name);
+        recvInf >> name;
+        pLogistics->manager.setName(name);
+        break;
     }
-    else if (command == commands.at(4) && !ban.contains(4)) {
-        cout << "Please input the account information" << endl;
+    case ADDCOURIER: {
         string username;
         string password;
         string name;
         string phone;
-        cout << "Username: ";
-        cin >> username;
-        while (username.size() > STRING_MAX_SIZE) {
-            cout << "Username length should be less than " << STRING_MAX_SIZE << endl;
-            cout << "Username: ";
-            cin >> username;
-        }
-        cout << "Password: ";
-        cin >> password;
-        while (password.size() > STRING_MAX_SIZE) {
-            cout << "Password length should be less than " << STRING_MAX_SIZE << endl;
-            cout << "Password: ";
-            cin >> password;
-        }
-        cout << "Name: ";
-        cin >> name;
-        while (name.size() > STRING_MAX_SIZE) {
-            cout << "Name length should be less than " << STRING_MAX_SIZE << endl;
-            cout << "Name: ";
-            cin >> name;
-        }
-        cout << "Phone Number: ";
-        cin >> phone;
-        regex r("^\\d+$");
-        while (!regex_match(phone, r) || phone.length() > 11) {
-            cout << "Format error, phone number consists of up to 11 digits" << endl;
-            cout << "Phone Number: ";
-            cin >> phone;
-        }
+        recvInf >> username >> password >> name >> phone;
         try {
-            main.pLogistics->createCourierAccount(username, password, name, stoull(phone));
+            mutx.lock();
+            pLogistics->createCourierAccount(username, password, name, stoull(phone));
+            mutx.unlock();
+            char outBuf = SUCCESS;
+            send(pClient->cliSock, &outBuf, 1, 0);
         }
         catch (const char* msg) {
-            cout << msg << endl;
+            mutx.unlock();
+            send(pClient->cliSock, msg, 1, 0);
         }
+        break;
     }
-    else if (command == commands.at(5) && !ban.contains(5)) {
-        cout << "Please input the courier's username: ";
+    case DELETECOURIER: {
         string username;
-        cin >> username;
+        recvInf >> username;
         try {
-            main.pLogistics->deleteCourierAccount(username);
+            mutx.lock();
+            pLogistics->deleteCourierAccount(username);
+            mutx.unlock();
+            char outBuf = SUCCESS;
+            send(pClient->cliSock, &outBuf, 1, 0);
         }
         catch (const char* msg) {
-            cout << msg << endl;
+            mutx.unlock();
+            send(pClient->cliSock, msg, 1, 0);
         }
+        break;
     }
-    else if (command == commands.at(6) && !ban.contains(6)) {
-        cout << "Not assigned expresses:" << endl;
-        try {
-            main.pLogistics->notAExpToString();
-        }
-        catch (const char* msg) {
-            cout << msg << endl;
-            return false;
-        }
-        cout << endl;
-        cout << "Please input the information of the express and the courier" << endl;
-        cout << "Express's courier number: ";
-        string courierNum;
-        cin >> courierNum;
-        regex r("[0-9]{10}");
-        while (!regex_match(courierNum, r)) {
-            cout << "Format error, courier number has 10 digits" << endl;
-            cout << "Express's courier number: ";
-            cin >> courierNum;
-        }
-        cout << "Courier's username: ";
+    case ASSIGN: {
         string username;
-        cin >> username;
+        recvInf >> username;
+        int i = 0;
+        bool moreInf;
         try {
-            main.pLogistics->assignExpress(main.pLogistics->findExpress(stoul(courierNum)), username);
+            moreInf = pLogistics->notAExpToString(outBuf, i * 10, i * 10 + 9);
         }
         catch (const char* msg) {
-            cout << msg << endl;
+            send(pClient->cliSock, msg, 1, 0);
+            break;
         }
-    }
-    else if (command == commands.at(7) && !ban.contains(7)) {
-        try {
-            main.pLogistics->usersToString();
-            cout << endl;
-        }
-        catch (const char* msg) {
-            cout << msg << endl;
-        }
-    }
-    else if (command == commands.at(8) && !ban.contains(8)) {
-        try {
-            main.pLogistics->couriersToString();
-            cout << endl;
-        }
-        catch (const char* msg) {
-            cout << msg << endl;
-        }
-    }
-    else if (command == commands.at(9) && !ban.contains(9)) {
-        try {
-            main.pLogistics->expressesToString();
-            cout << endl;
-        }
-        catch (const char* msg) {
-            cout << msg << endl;
-        }
-    }
-    else if (command == commands.at(10) && !ban.contains(10)) {
-        cout << "Please input the time information in format %Y-%m-%d %H:%M:%S" << endl;
-        cout << "Lower Bound: ";
-        struct tm lowerBound;
-        cin >> get_time(&lowerBound, "%Y-%m-%d %H:%M:%S");
-        cout << "Upper Bound: ";
-        struct tm upperBound;
-        cin >> get_time(&upperBound, "%Y-%m-%d %H:%M:%S");
-        cout << endl;
-        try {
-            vector<const Express*> expresses = main.pLogistics->searchCreateTime(mktime(&lowerBound), mktime(&upperBound));
-            for (auto temp : expresses) {
-                cout << *((Express*) temp) << endl;
+        char msg = SUCCESS;
+        send(pClient->cliSock, &msg, 1, 0);
+
+        i++;
+        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        char msg = 1;
+        while (moreInf) {
+            send(pClient->cliSock, &msg, 1, 0);
+
+            recv(pClient->cliSock, &msg, 1, 0);
+            if (msg) {
+                outBuf.clear();
+                moreInf = pLogistics->notAExpToString(outBuf, i * 10, i * 10 + 9);
+                i++;
+                send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
             }
-        }   
-        catch (const char* msg) {
-            cout << msg << endl;
+            else
+                break;
         }
-    }
-    else if (command == commands.at(11) && !ban.contains(11)) {
-        string username;
-        cout << "Please input the user's username: ";
-        cin >> username;
-        cout << endl;
+        msg = 0;
+        send(pClient->cliSock, &msg, 1, 0);
+
+        unsigned int courierNum;
+        recv(pClient->cliSock, (char*)&courierNum, 4, 0);
+
+        Express* pExpress;
         try {
-            main.pUser = main.pLogistics->findUser(username);
+            pExpress = pLogistics->findExpress(courierNum);
+        }
+        catch (const char* msg) {
+            send(pClient->cliSock, msg, 1, 0);
+            break;
+        }
+
+        try {
+            mutx.lock();
+            pLogistics->assignExpress(pExpress, username);
+            mutx.unlock();
+            char outBuf = SUCCESS;
+            send(pClient->cliSock, &outBuf, 1, 0);
+        }
+        catch (const char* msg) {
+            mutx.unlock();
+            send(pClient->cliSock, msg, 1, 0);
+        }
+        break;
+    }
+    case DSPLYUSER: {
+        int i = 0;
+        bool moreInf;
+        try {
+            moreInf = pLogistics->usersToString(outBuf, i * 10, i * 10 + 9);
+        }
+        catch (const char* msg) {
+            send(pClient->cliSock, msg, 1, 0);
+            break;
+        }
+
+        char msg = SUCCESS;
+        send(pClient->cliSock, &msg, 1, 0);
+
+        i++;
+        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        char msg = 1;
+        while (moreInf) {
+            send(pClient->cliSock, &msg, 1, 0);
+
+            recv(pClient->cliSock, &msg, 1, 0);
+            if (msg) {
+                outBuf.clear();
+                moreInf = pLogistics->usersToString(outBuf, i * 10, i * 10 + 9);
+                i++;
+                send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+            }
+            else
+                break;
+        }
+        msg = 0;
+        send(pClient->cliSock, &msg, 1, 0);
+        break;
+    }
+    case DSPLYCOURIER: {
+        int i = 0;
+        bool moreInf;
+        try {
+            moreInf = pLogistics->couriersToString(outBuf, i * 10, i * 10 + 9);
+        }
+        catch (const char* msg) {
+            send(pClient->cliSock, msg, 1, 0);
+            break;
+        }
+
+        char msg = SUCCESS;
+        send(pClient->cliSock, &msg, 1, 0);
+
+        i++;
+        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        char msg = 1;
+        while (moreInf) {
+            send(pClient->cliSock, &msg, 1, 0);
+
+            recv(pClient->cliSock, &msg, 1, 0);
+            if (msg) {
+                outBuf.clear();
+                moreInf = pLogistics->couriersToString(outBuf, i * 10, i * 10 + 9);
+                i++;
+                send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+            }
+            else
+                break;
+        }
+        msg = 0;
+        send(pClient->cliSock, &msg, 1, 0);
+        break;
+    }
+    case DSPLYEXP: {
+        int i = 0;
+        bool moreInf;
+        try {
+            moreInf = pLogistics->expressesToString(outBuf, i * 10, i * 10 + 9);
+        }
+        catch (const char* msg) {
+            send(pClient->cliSock, msg, 1, 0);
+            break;
+        }
+
+        char msg = SUCCESS;
+        send(pClient->cliSock, &msg, 1, 0);
+
+        i++;
+        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        char msg = 1;
+        while (moreInf) {
+            send(pClient->cliSock, &msg, 1, 0);
+
+            recv(pClient->cliSock, &msg, 1, 0);
+            if (msg) {
+                outBuf.clear();
+                moreInf = pLogistics->expressesToString(outBuf, i * 10, i * 10 + 9);
+                i++;
+                send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+            }
+            else
+                break;
+        }
+        msg = 0;
+        send(pClient->cliSock, &msg, 1, 0);
+        break;
+    }
+    case SRCHCREATETM: {
+        struct tm lowerBound;
+        recvInf >> get_time(&lowerBound, "%Y-%m-%d %H:%M:%S");
+        struct tm upperBound;
+        recvInf >> get_time(&upperBound, "%Y-%m-%d %H:%M:%S");
+
+        try {
+            vector<const Express*> expresses = pLogistics->searchCreateTime(mktime(&lowerBound), mktime(&upperBound));
+            char msg = SUCCESS;
+            send(pClient->cliSock, &msg, 1, 0);
+            int i = 0, j = 0;
+            for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
+                outBuf << "[" << j << "]" << endl;
+                outBuf << expresses.at(j) << endl;
+            }
+            send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+            i++;
+            char msg = 1;
+            while (j < expresses.size()) {
+                send(pClient->cliSock, &msg, 1, 0);
+
+                recv(pClient->cliSock, &msg, 1, 0);
+                if (msg) {
+                    outBuf.clear();
+                    for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
+                        outBuf << "[" << j << "]" << endl;
+                        outBuf << expresses.at(j) << endl;
+                    }
+                    i++;
+                    send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+                }
+                else
+                    break;
+            }
+            msg = 0;
+            send(pClient->cliSock, &msg, 1, 0);
+        }
+        catch (const char* msg) {
+            send(pClient->cliSock, msg, 1, 0);
+        }
+        break;
+    }
+    case FINDUSER: {
+        string username;
+        recvInf >> username;
+        try {
+            pClient->pUser = pLogistics->findUser(username);
             currentModule = 0;
+            char outBuf = SUCCESS;
+            send(pClient->cliSock, &outBuf, 1, 0);
         }
         catch (const char* msg) {
-            cout << msg << endl;
+            send(pClient->cliSock, msg, 1, 0);
         }
+        break;
     }
-    else if (command == commands.at(12) && !ban.contains(12)) {
+    case FINDCOURIER: {
         string username;
-        cout << "Please input the courier's username: ";
-        cin >> username;
-        cout << endl;
+        recvInf >> username;
         try {
-            main.pCourier = main.pLogistics->findCourier(username);
+            pClient->pCourier = pLogistics->findCourier(username);
             currentModule = 1;
+            char outBuf = SUCCESS;
+            send(pClient->cliSock, &outBuf, 1, 0);
         }
         catch (const char* msg) {
-            cout << msg << endl;
+            send(pClient->cliSock, msg, 1, 0);
         }
+        break;
     }
-    else if (command == commands.at(13) && !ban.contains(13)) {
-        cout << "Please input the courier number: ";
+    case FINDEXP: {
         string courierNum;
-        cin >> courierNum;
-        regex r("[0-9]{10}");
-        while(!regex_match(courierNum, r)) {
-            cout << "Format error, courier number consists of 10 digits" << endl;
-            cout << "Please input the courier number: ";
-            cin >> courierNum;
-        }
-        cout << endl;
+        recvInf >> courierNum;
         try {
-            cout << *main.pLogistics->findExpress(stoul(courierNum)) << endl;
+            outBuf << *pLogistics->findExpress(stoul(courierNum)) << endl;
+            char msg = SUCCESS;
+            send(pClient->cliSock, &msg, 1, 0);
+            send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
         }
         catch (const char* msg) {
-            cout << msg << endl;
+            send(pClient->cliSock, msg, 1, 0);
         }
+        break;
     }
-    else if (command == commands.at(14) && !ban.contains(14)) {
-        cout << "Available commands:" << endl;
-        if (!ban.contains(0))
-            cout << "  " << commands.at(0) << ": return to the upper module" << endl;
-        if (!ban.contains(1))
-            cout << "  " << commands.at(1) << ": check the manager information" << endl;
-        if (!ban.contains(2))
-            cout << "  " << commands.at(2) << ": change the password" << endl;
-        if (!ban.contains(3))
-            cout << "  " << commands.at(3) << ": change the name" << endl;
-        if (!ban.contains(4))
-            cout << "  " << commands.at(4) << ": add a new courier account" << endl;
-        if (!ban.contains(5))
-            cout << "  " << commands.at(5) << ": delete a courier account" << endl;
-        if (!ban.contains(6))
-            cout << "  " << commands.at(6) << ": assign an express to a courier" << endl;
-        if (!ban.contains(7))
-            cout << "  " << commands.at(7) << ": display all the users' massage" << endl;
-        if (!ban.contains(8))
-            cout << "  " << commands.at(8) << ": display all the couriers' massage" << endl;
-        if (!ban.contains(9))
-            cout << "  " << commands.at(9) << ": display all the expresses' massage" << endl;
-        if (!ban.contains(10))
-            cout << "  " << commands.at(10) << ": search the related expresses by creating time" << endl;
-        if (!ban.contains(11))
-            cout << "  " << commands.at(11) << ": find the specific user and enter the user module" << endl;
-        if (!ban.contains(12))
-            cout << "  " << commands.at(12) << ": find the specific courier and enter the courier module" << endl;
-        if (!ban.contains(13))
-            cout << "  " << commands.at(13) << ": find the specific express by courier number" << endl;
-        if (!ban.contains(14))
-            cout << "  " << commands.at(14) << ": print this help" << endl;
+    default:
+        return false;
     }
-    else
-        cout << "Unknown command" << endl;
     return false;
 }

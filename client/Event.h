@@ -1,8 +1,8 @@
 #pragma once
 
-enum EVENT : uint8_t 
-{ 
-	SUCCESS, 
+enum EVENT : uint8_t
+{
+	SUCCESS,
 	CONTAINER_EMPTY,
 	ELEMENT_NOT_FOUND,
 	ELEMENT_EXCEED_LIMIT,

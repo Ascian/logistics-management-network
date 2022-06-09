@@ -68,6 +68,7 @@ bool MainModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
             send(pClient->cliSock, &outBuf, 1, 0);
         }
         catch (const char* msg) {
+            mutx.unlock();
             send(pClient->cliSock, msg, 1, 0);
         }
         break;
