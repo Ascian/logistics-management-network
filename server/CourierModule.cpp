@@ -48,18 +48,18 @@ bool CourierModule::execute(Logistics* pLogistics, Client* pClient, const char* 
         send(pClient->cliSock, &msg, 1, 0);
         i++;
         send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        Sleep(1);
+        Sleep(10);
         msg = 1;
         while (moreInf) {
             send(pClient->cliSock, &msg, 1, 0);
 
             recv(pClient->cliSock, &msg, 1, 0);
             if (msg) {
-                outBuf.clear();
+                outBuf.str("");
                 moreInf = pClient->pCourier->notPExpToString(outBuf, i * 10, i * 10 + 9);
                 i++;
                 send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-                Sleep(1);
+                Sleep(10);
             }
             else
                 break;
@@ -115,18 +115,18 @@ bool CourierModule::execute(Logistics* pLogistics, Client* pClient, const char* 
 
         i++;
         send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        Sleep(1);
+        Sleep(10);
         msg = 1;
         while (moreInf) {
             send(pClient->cliSock, &msg, 1, 0);
 
             recv(pClient->cliSock, &msg, 1, 0);
             if (msg) {
-                outBuf.clear();
+                outBuf.str("");
                 moreInf = pClient->pCourier->notPExpToString(outBuf, i * 10, i * 10 + 9);
                 i++;
                 send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-                Sleep(1);
+                Sleep(10);
             }
             else
                 break;
@@ -152,18 +152,18 @@ bool CourierModule::execute(Logistics* pLogistics, Client* pClient, const char* 
 
         i++;
         send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        Sleep(1);
+        Sleep(10);
         msg = 1;
         while (moreInf) {
             send(pClient->cliSock, &msg, 1, 0);
 
             recv(pClient->cliSock, &msg, 1, 0);
             if (msg) {
-                outBuf.clear();
+                outBuf.str("");
                 moreInf = pClient->pCourier->notRExpToString(outBuf, i * 10, i * 10 + 9);
                 i++;
                 send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-                Sleep(1);
+                Sleep(10);
             }
             else
                 break;
@@ -188,18 +188,18 @@ bool CourierModule::execute(Logistics* pLogistics, Client* pClient, const char* 
 
         i++;
         send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        Sleep(1);
+        Sleep(10);
         msg = 1;
         while (moreInf) {
             send(pClient->cliSock, &msg, 1, 0);
 
             recv(pClient->cliSock, &msg, 1, 0);
             if (msg) {
-                outBuf.clear();
+                outBuf.str("");
                 moreInf = pClient->pCourier->rExpToString(outBuf, i * 10, i * 10 + 9);
                 i++;
                 send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-                Sleep(1);
+                Sleep(10);
             }
             else
                 break;
@@ -223,7 +223,7 @@ bool CourierModule::execute(Logistics* pLogistics, Client* pClient, const char* 
                 outBuf << *(Express*)expresses.at(j) << endl;
             }
             send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-            Sleep(1);
+            Sleep(10);
             i++;
             msg = 1;
             while (j < expresses.size()) {
@@ -231,14 +231,14 @@ bool CourierModule::execute(Logistics* pLogistics, Client* pClient, const char* 
 
                 recv(pClient->cliSock, &msg, 1, 0);
                 if (msg) {
-                    outBuf.clear();
+                    outBuf.str("");
                     for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
                         outBuf << "[" << j << "]" << endl;
                         outBuf << *(Express*)expresses.at(j) << endl;
                     }
                     i++;
                     send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-                    Sleep(1);
+                    Sleep(10);
                 }
                 else
                     break;
@@ -264,7 +264,7 @@ bool CourierModule::execute(Logistics* pLogistics, Client* pClient, const char* 
                 outBuf << *(Express*)expresses.at(j) << endl;
             }
             send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-            Sleep(1);
+            Sleep(10);
             i++;
             msg = 1;
             while (j < expresses.size()) {
@@ -272,14 +272,14 @@ bool CourierModule::execute(Logistics* pLogistics, Client* pClient, const char* 
 
                 recv(pClient->cliSock, &msg, 1, 0);
                 if (msg) {
-                    outBuf.clear();
+                    outBuf.str("");
                     for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
                         outBuf << "[" << j << "]" << endl;
                         outBuf << *(Express*)expresses.at(j) << endl;
                     }
                     i++;
                     send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-                    Sleep(1);
+                    Sleep(10);
                 }
                 else
                     break;
@@ -308,7 +308,7 @@ bool CourierModule::execute(Logistics* pLogistics, Client* pClient, const char* 
                 outBuf << *(Express*)expresses.at(j) << endl;
             }
             send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-            Sleep(1);
+            Sleep(10);
             i++;
             msg = 1;
             while (j < expresses.size()) {
@@ -316,14 +316,14 @@ bool CourierModule::execute(Logistics* pLogistics, Client* pClient, const char* 
 
                 recv(pClient->cliSock, &msg, 1, 0);
                 if (msg) {
-                    outBuf.clear();
+                    outBuf.str("");
                     for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
                         outBuf << "[" << j << "]" << endl;
                         outBuf << *(Express*)expresses.at(j) << endl;
                     }
                     i++;
                     send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-                    Sleep(1);
+                    Sleep(10);
                 }
                 else
                     break;

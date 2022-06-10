@@ -55,9 +55,9 @@ bool UserModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
         recvInf >> receiver >> condition >> description >> kind >> amount;
         try {
             mutx.lock();
-            pLogistics->createLogistics(pClient->pUser->getUsername(), receiver, condition, description, stoul(amount), kind);
+            unsigned int courierNum = pLogistics->createLogistics(pClient->pUser->getUsername(), receiver, condition, description, stoul(amount), kind);
             mutx.unlock();
-            cout << "A new express added" << endl;
+            cout << "A new express \"" << setfill('0') << setw(10) << courierNum << "\" added" << endl;
             char msg = SUCCESS;
             send(pClient->cliSock, &msg, 1, 0);
         }
@@ -82,18 +82,18 @@ bool UserModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
         send(pClient->cliSock, &msg, 1, 0);
         i++;
         send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        Sleep(1);
+        Sleep(10);
         msg = 1;
         while (moreInf) {
             send(pClient->cliSock, &msg, 1, 0);
 
             recv(pClient->cliSock, &msg, 1, 0);
             if (msg) {
-                outBuf.clear();
+                outBuf.str("");
                 moreInf = pClient->pUser->notRExpToString(outBuf, i * 10, i * 10 + 9);
                 i++;
                 send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-                Sleep(1);
+                Sleep(10);
             }
             else
                 break;

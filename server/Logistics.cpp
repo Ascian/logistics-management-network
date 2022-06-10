@@ -96,32 +96,32 @@ void createExpress(Express*& pExpress, const string& senderUsername, const strin
 		pExpress = NULL;
 }
 
-bool Logistics::createLogistics(const string& senderUsername, const string& receiverUsername, 
+unsigned int Logistics::createLogistics(const string& senderUsername, const string& receiverUsername, 
 	const string& condition, const string& description, const unsigned int amount, const string& kind)
 {
 	if (senderUsername == receiverUsername) {
 		throw (char)RECEIVER_EQUAL_SENDER;
-		return false;
+		return UINT_MAX;
 	}
 
 	auto temp = users.find(senderUsername);
 	if (temp == users.end()) {
 		throw (char)SENDER_NOT_EXIST;
-		return false;
+		return UINT_MAX;
 	}
 
 	User* sender = temp->second;
 	temp = users.find(receiverUsername);
 	if (temp == users.end()) {
 		throw (char)RECEIVER_NOT_EXIST;
-		return false;
+		return UINT_MAX;
 	}
 	User* receiver = temp->second;
 
 	//创建快递单号
 	if (expresses.size() >= expresses.max_size()) {
 		throw (char)ELEMENT_EXCEED_LIMIT;
-		return false;
+		return UINT_MAX;
 	}
 	unsigned int courierNumber = expresses.size();
 
@@ -130,13 +130,13 @@ bool Logistics::createLogistics(const string& senderUsername, const string& rece
 		condition, description, courierNumber, amount, kind);
 	if (!pExpress) {
 		throw(char)(EXPRESS_UNKNOWN_KIND);
-		return false;
+		return UINT_MAX;
 	}
 
 	if (sender->getBalance() < pExpress->getPrice()) {
 		//余额不足
 		throw (char)BALANCE_NOT_ENOUGH;
-		return false;
+		return UINT_MAX;
 	}
 
 	expresses.insert({ courierNumber,pExpress });
@@ -155,7 +155,7 @@ bool Logistics::createLogistics(const string& senderUsername, const string& rece
 	receiver->addNotPickedList(pExpress);//加入为揽收快递列表
 	receiver->addSenderList(pExpress);//加入发送人查找表
 
-	return true;
+	return courierNumber;
 }
 
 bool Logistics::assignExpress(Express* pExpress, const string& courierUsername){

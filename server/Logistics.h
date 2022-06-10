@@ -55,7 +55,7 @@ public:
 	bool deleteCourierAccount(const string& username);
 
 	//创建一个物流快递
-	bool createLogistics(const string& senderUsername, const string& receiverUsername, 
+	unsigned int createLogistics(const string& senderUsername, const string& receiverUsername,
 		const string& condition, const string& description, const unsigned int amount,
 		const string& kind);
 

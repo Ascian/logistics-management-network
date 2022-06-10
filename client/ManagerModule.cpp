@@ -388,7 +388,7 @@ bool ManagerModule::execute(SOCKET& cliSock, const string& command, const set<in
         recv(cliSock, &msg, 1, 0);
 
         if (msg == SUCCESS) {
-            currentModule = 0;
+            currentModule = 1;
         }
         else {
             cout << "Username not found" << endl;

@@ -2,7 +2,7 @@
 
 enum COMMAND : uint8_t
 {
-    EXIT,
+    EXIT = 1,
     RETURN,
     USER,
     COURIER,

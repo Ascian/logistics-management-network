@@ -75,7 +75,7 @@ int main()
                 break;
             }
             if (i == MAX_LINK_NUM - 1) {
-                Sleep(1);
+                Sleep(10);
                 i = 0;
             }
         }
