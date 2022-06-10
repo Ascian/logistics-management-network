@@ -97,6 +97,7 @@ bool ManagerModule::execute(SOCKET& cliSock, const string& command, const set<in
     else if (command == commands.at(5) && !ban.contains(5)) {
         cout << "Please input the courier's username: ";
         string username;
+        cin >> username;
         outBuf << DELETECOURIER << username << endl ;
         send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
 
@@ -302,10 +303,11 @@ bool ManagerModule::execute(SOCKET& cliSock, const string& command, const set<in
         cout << "Please input the time information in format %Y-%m-%d %H:%M:%S" << endl;
         cout << "Lower Bound: ";
         char lowerBound[20];
+        cin.getline(lowerBound, 20);
         cin .getline(lowerBound, 20);
         cout << "Upper Bound: ";     
         char upperBound[20];
-        cin.getline(upperBound, 20);
+        cin .getline(upperBound, 20);
 
         outBuf << SRCHCREATETM << lowerBound << endl << upperBound << endl;
         send(cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);

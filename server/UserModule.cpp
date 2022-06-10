@@ -82,6 +82,7 @@ bool UserModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
         send(pClient->cliSock, &msg, 1, 0);
         i++;
         send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+        Sleep(1);
         msg = 1;
         while (moreInf) {
             send(pClient->cliSock, &msg, 1, 0);
@@ -92,6 +93,7 @@ bool UserModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
                 moreInf = pClient->pUser->notRExpToString(outBuf, i * 10, i * 10 + 9);
                 i++;
                 send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
+                Sleep(1);
             }
             else
                 break;

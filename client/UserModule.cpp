@@ -214,6 +214,9 @@ bool UserModule::execute(SOCKET& cliSock, const string& command, const set<int>&
             else if (msg == EXPRESS_FORBIT_SIGNFOR) {
                 cout << "This express is not sended yet" << endl;
             }
+            else {
+                i++;
+            }
         }
     }
     else if (command == commands.at(9) && !ban.contains(9)) {

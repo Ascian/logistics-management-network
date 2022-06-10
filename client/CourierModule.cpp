@@ -126,6 +126,9 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
             else if (msg == ELEMENT_NOT_FOUND) {
                 cout << "No such express" << endl;
             }
+            else {
+                i++;
+            }
         }
     }
     else if (command == commands.at(6) && !ban.contains(6)) {
@@ -338,6 +341,7 @@ bool CourierModule::execute(SOCKET& cliSock, const string& command, const set<in
         cout << "Please input the time information in format %Y-%m-%d %H:%M:%S" << endl;
         cout << "Lower Bound: ";
         char lowerBound[20];
+        cin.getline(lowerBound, 20);
         cin .getline(lowerBound, 20);
         cout << "Upper Bound: ";     
         char upperBound[20];

@@ -175,6 +175,7 @@ bool ReceiverModule::execute(SOCKET& cliSock, const string& command, const set<i
         cout << "Please input the time information in format %Y-%m-%d %H:%M:%S" << endl;
         cout << "Lower Bound: ";
         char lowerBound[20];
+        cin.getline(lowerBound, 20);
         cin .getline(lowerBound, 20);
         cout << "Upper Bound: ";     
         char upperBound[20];

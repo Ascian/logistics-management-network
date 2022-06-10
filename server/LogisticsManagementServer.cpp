@@ -88,7 +88,6 @@ int main()
     closesocket(servSock);
     WSACleanup();
 
-    pLogistics->save(SAVE_PATH);
     delete(pLogistics);
     return 0;
 }
@@ -146,4 +145,5 @@ void serverWorking(Client* pClient)
     delete(pMainModule);
     closesocket(pClient->cliSock);
     pClient->cliSock = INVALID_SOCKET;
+    pLogistics->save(SAVE_PATH);
 }

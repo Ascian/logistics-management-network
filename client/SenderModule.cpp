@@ -136,6 +136,7 @@ bool SenderModule::execute(SOCKET& cliSock, const string& command, const set<int
         cout << "Lower Bound: ";
         char lowerBound[20];
         cin.getline(lowerBound, 20);
+        cin.getline(lowerBound, 20);
         cout << "Upper Bound: ";
         char upperBound[20];
         cin.getline(upperBound, 20);

@@ -13,7 +13,7 @@
 #include"Command.h"
 
 const int STRING_MAX_SIZE = 30;
-const int MAX_BUFFER_SIZE = 2000;
+const int MAX_BUFFER_SIZE = 5000;
 
 using namespace std;
 
