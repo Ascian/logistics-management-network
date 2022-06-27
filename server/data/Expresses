@@ -86,12 +86,12 @@ Amount: 1
 
 Kind: book
 Courier Number: 0000000007
-Courier: ---NONE---
+Courier: courier1
 Sender: user1
 Reseiver: user2
 Creat Time: 2022-Jun-10 10:04:21
-Send Time: Not assgined to a courier
-Receive Time: Not signed for
+Send Time: 2022-Jun-27 22:23:55
+Receive Time: 2022-Jun-27 22:24:15
 Condition: 1
 Description: 1
 Amount: 1

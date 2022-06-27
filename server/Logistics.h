@@ -1,7 +1,10 @@
 #pragma once
 #include"User.h"
 #include"Manager.h"
-#include"ExpressHeader.h"
+#include"Express.h"
+#include"Fragile.h"
+#include"NormalExpress.h"
+#include"Book.h"
 #include"Courier.h"
 #include"Event.h"
 

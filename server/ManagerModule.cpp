@@ -68,38 +68,7 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
     case ASSIGN: {
         string username;
         recvInf >> username;
-        int i = 0;
-        bool moreInf;
-        try {
-            moreInf = pLogistics->notAExpToString(outBuf, i * 10, i * 10 + 9);
-        }
-        catch (const char msg) {
-            send(pClient->cliSock, &msg, 1, 0);
-            break;
-        }
-        char msg = SUCCESS;
-        send(pClient->cliSock, &msg, 1, 0);
-
-        i++;
-        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        Sleep(10);
-        msg = 1;
-        while (moreInf) {
-            send(pClient->cliSock, &msg, 1, 0);
-
-            recv(pClient->cliSock, &msg, 1, 0);
-            if (msg) {
-                outBuf.str("");
-                moreInf = pLogistics->notAExpToString(outBuf, i * 10, i * 10 + 9);
-                i++;
-                send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-                Sleep(10);
-            }
-            else
-                break;
-        }
-        msg = 0;
-        send(pClient->cliSock, &msg, 1, 0);
+        display(pLogistics, pClient, 0, DSPLYNAEXP);
 
         unsigned int courierNum;
         recv(pClient->cliSock, (char*)&courierNum, 4, 0);
@@ -129,155 +98,19 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
         break;
     }
     case DSPLYUSER: {
-        int i = 0;
-        bool moreInf;
-        try {
-            moreInf = pLogistics->usersToString(outBuf, i * 10, i * 10 + 9);
-        }
-        catch (const char msg) {
-            send(pClient->cliSock, &msg, 1, 0);
-            break;
-        }
-
-        char msg = SUCCESS;
-        send(pClient->cliSock, &msg, 1, 0);
-
-        i++;
-        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        Sleep(10);
-        msg = 1;
-        while (moreInf) {
-            send(pClient->cliSock, &msg, 1, 0);
-
-            recv(pClient->cliSock, &msg, 1, 0);
-            if (msg) {
-                outBuf.str("");
-                moreInf = pLogistics->usersToString(outBuf, i * 10, i * 10 + 9);
-                i++;
-                send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-                Sleep(10);
-            }
-            else
-                break;
-        }
-        msg = 0;
-        send(pClient->cliSock, &msg, 1, 0);
+        display(pLogistics, pClient, 0, DSPLYUSER);
         break;
     }
     case DSPLYCOURIER: {
-        int i = 0;
-        bool moreInf;
-        try {
-            moreInf = pLogistics->couriersToString(outBuf, i * 10, i * 10 + 9);
-        }
-        catch (const char msg) {
-            send(pClient->cliSock, &msg, 1, 0);
-            break;
-        }
-
-        char msg = SUCCESS;
-        send(pClient->cliSock, &msg, 1, 0);
-
-        i++;
-        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        Sleep(10);
-        msg = 1;
-        while (moreInf) {
-            send(pClient->cliSock, &msg, 1, 0);
-
-            recv(pClient->cliSock, &msg, 1, 0);
-            if (msg) {
-                outBuf.str("");
-                moreInf = pLogistics->couriersToString(outBuf, i * 10, i * 10 + 9);
-                i++;
-                send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-                Sleep(10);
-            }
-            else
-                break;
-        }
-        msg = 0;
-        send(pClient->cliSock, &msg, 1, 0);
+        display(pLogistics, pClient, 0, DSPLYCOURIER);
         break;
     }
     case DSPLYEXP: {
-        int i = 0;
-        bool moreInf;
-        try {
-            moreInf = pLogistics->expressesToString(outBuf, i * 10, i * 10 + 9);
-        }
-        catch (const char msg) {
-            send(pClient->cliSock, &msg, 1, 0);
-            break;
-        }
-
-        char msg = SUCCESS;
-        send(pClient->cliSock, &msg, 1, 0);
-
-        i++;
-        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        Sleep(10);
-        msg = 1;
-        while (moreInf) {
-            send(pClient->cliSock, &msg, 1, 0);
-
-            recv(pClient->cliSock, &msg, 1, 0);
-            if (msg) {
-                outBuf.str("");
-                moreInf = pLogistics->expressesToString(outBuf, i * 10, i * 10 + 9);
-                i++;
-                send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-                Sleep(10);
-            }
-            else
-                break;
-        }
-        msg = 0;
-        send(pClient->cliSock, &msg, 1, 0);
+        display(pLogistics, pClient, 0, DSPLYEXP);
         break;
     }
     case SRCHCREATETM: {
-        struct tm lowerBound;
-        recvInf >> get_time(&lowerBound, "%Y-%m-%d %H:%M:%S");
-        struct tm upperBound;
-        recvInf >> get_time(&upperBound, "%Y-%m-%d %H:%M:%S");
-
-        try {
-            vector<const Express*> expresses = pLogistics->searchCreateTime(mktime(&lowerBound), mktime(&upperBound));
-            char msg = SUCCESS;
-            send(pClient->cliSock, &msg, 1, 0);
-            int i = 0, j = 0;
-            for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
-                outBuf << "[" << j << "]" << endl;
-                outBuf << *(Express*)expresses.at(j) << endl;
-            }
-            send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-            Sleep(10);
-            i++;
-            msg = 1;
-            while (j < expresses.size()) {
-                send(pClient->cliSock, &msg, 1, 0);
-
-                recv(pClient->cliSock, &msg, 1, 0);
-                if (msg) {
-                    outBuf.str("");
-                    for (j = i * 10; j < i * 10 + 10 && j < expresses.size(); j++) {
-                        outBuf << "[" << j << "]" << endl;
-                        outBuf << *(Express*)expresses.at(j) << endl;
-                    }
-                    i++;
-                    send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-                    Sleep(10);
-                }
-                else
-                    break;
-            }
-            msg = 0;
-            send(pClient->cliSock, &msg, 1, 0);
-        }
-        catch (const char msg) {
-            send(pClient->cliSock, &msg, 1, 0);
-        }
+        search(pLogistics, pClient, 0, recvInf, SRCHCREATETM);
         break;
     }
     case FINDUSER: {
@@ -309,17 +142,7 @@ bool ManagerModule::execute(Logistics* pLogistics, Client* pClient, const char* 
         break;
     }
     case FINDEXP: {
-        string courierNum;
-        recvInf >> courierNum;
-        try {
-            outBuf << *pLogistics->findExpress(stoul(courierNum)) << endl;
-            char msg = SUCCESS;
-            send(pClient->cliSock, &msg, 1, 0);
-            send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        }
-        catch (const char msg) {
-            send(pClient->cliSock, &msg, 1, 0);
-        }
+        findExpress(pLogistics, pClient, recvInf);
         break;
     }
     default:

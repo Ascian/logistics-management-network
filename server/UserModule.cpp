@@ -68,38 +68,7 @@ bool UserModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
         break;
     }
     case SIGNFOR: {
-        int i = 0;
-        bool moreInf;
-        try {
-            moreInf = pClient->pUser->notRExpToString(outBuf, i * 10, i * 10 + 9);
-        }
-        catch (const char msg) {
-            send(pClient->cliSock, &msg, 1, 0);
-            break;
-        }
-
-        char msg = SUCCESS;
-        send(pClient->cliSock, &msg, 1, 0);
-        i++;
-        send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        Sleep(10);
-        msg = 1;
-        while (moreInf) {
-            send(pClient->cliSock, &msg, 1, 0);
-
-            recv(pClient->cliSock, &msg, 1, 0);
-            if (msg) {
-                outBuf.str("");
-                moreInf = pClient->pUser->notRExpToString(outBuf, i * 10, i * 10 + 9);
-                i++;
-                send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-                Sleep(10);
-            }
-            else
-                break;
-        }
-        msg = 0;
-        send(pClient->cliSock, &msg, 1, 0);
+        display(pLogistics, pClient, 2, DSPLYNREXP);
 
         while (true) {
             unsigned int courierNum;
@@ -146,17 +115,7 @@ bool UserModule::execute(Logistics* pLogistics, Client* pClient, const char* rec
         break;
     }
     case FINDEXP: {
-        string courierNum;
-        recvInf >> courierNum;
-        try {
-            outBuf << *pLogistics->findExpress(stoul(courierNum)) << endl;
-            char msg = SUCCESS;
-            send(pClient->cliSock, &msg, 1, 0);
-            send(pClient->cliSock, outBuf.str().c_str(), outBuf.str().size(), 0);
-        }
-        catch (const char msg) {
-            send(pClient->cliSock, &msg, 1, 0);
-        }
+        findExpress(pLogistics, pClient, recvInf);
         break;
     }
     default:

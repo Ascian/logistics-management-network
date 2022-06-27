@@ -38,5 +38,6 @@ enum COMMAND : uint8_t
     SRCHRECEIVETM,
     FINDUSER,
     FINDCOURIER,
-    FINDEXP
+    FINDEXP,
+    DSPLYNAEXP
 };

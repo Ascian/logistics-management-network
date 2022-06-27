@@ -50,5 +50,10 @@ public:
 	//÷¥––√¸¡Ó
 	virtual bool execute(Logistics* pLogistics, Client* pClient, const char* recvBuf, mutex& mutx) = 0;
 
+    void display(Logistics* pLogistics, Client* pClient, const char kind, const char event);
+
+	void search(Logistics* pLogistics, Client* pClient, const char kind, istringstream& recvInf, const char event);
+
+	void findExpress(Logistics* pLogistics, Client* pClient, istringstream& recvInf);
 };
 
